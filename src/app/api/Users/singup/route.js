@@ -5,11 +5,11 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/app/helper/mailer";
 import { writeFile } from "fs/promises";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 export async function POST(Request) {
   try {

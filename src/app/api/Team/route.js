@@ -2,11 +2,11 @@ const { connect } = require("@/app/config/db");
 const { default: Team } = require("@/app/models/TeamModel");
 const { NextResponse } = require("next/server");
 import { writeFile } from "fs/promises";
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 // post team
 export async function POST(Request) {
   try {

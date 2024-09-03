@@ -2,11 +2,11 @@ const { connect } = require("@/app/config/db");
 const { default: Project } = require("@/app/models/ProjectModel");
 const { writeFile } = require("fs/promises");
 const { NextResponse } = require("next/server");
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 // post team
 export async function POST(Request) {

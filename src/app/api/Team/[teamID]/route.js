@@ -4,11 +4,11 @@ const { NextResponse } = require("next/server");
 import { unlink, writeFile } from "fs/promises";
 import path from "path";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 // Delete team member
 export async function DELETE(request, context) {

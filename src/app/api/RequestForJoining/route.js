@@ -2,11 +2,11 @@ const { connect } = require("@/app/config/db");
 const { default: RequestForJoining } = require("@/app/models/RequestOfJoining");
 const { NextResponse } = require("next/server");
 import { writeFile } from "fs/promises";
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
 
 // post
 export async function POST(Request) {
