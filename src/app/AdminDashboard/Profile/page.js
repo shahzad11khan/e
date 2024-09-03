@@ -8,8 +8,13 @@ import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import { isAuthenticated } from "@/app/helper/verifytoken";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 const Profile = () => {
+  const Header = dynamic(() => import("../components/Header"), { ssr: false });
+  const Sidebar = dynamic(() => import("../components/Sidebar"), {
+    ssr: false,
+  });
   const userId = localStorage.getItem("userId");
   const router = useRouter();
 
