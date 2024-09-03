@@ -117,15 +117,18 @@ const Profile = () => {
   const [showConformPassword, setShowConformPassword] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
-    if (!isAuthenticated()) {
-      router.push("/AdminDashboard/Login"); // Redirect to login page if not authenticated
-      return;
-    }
+    // Check if window is defined (i.e., the code is running on the client-side)
+    if (typeof window !== "undefined") {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
+        router.push("/AdminDashboard/Login"); // Redirect to login page if not authenticated
+        return;
+      }
 
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      showalladmins(userId);
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        showalladmins(userId);
+      }
     }
   }, []);
 
