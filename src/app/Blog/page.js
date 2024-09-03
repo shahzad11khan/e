@@ -4,7 +4,7 @@ import Top from "../Utils/Top";
 import Image from "next/image";
 import { BlogsCount } from "../AdminDashboard/components/ShowApidatas/ShowUserAPiDatas";
 
-const page = () => {
+const Page = () => {
   const [blogs, setBlog] = useState([]);
   const [expandedBlogs, setExpandedBlogs] = useState({});
 
@@ -132,4 +132,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -5,7 +5,7 @@ import Image from "next/image";
 import ApplyContactForm from "../Utils/ApplyContactForm";
 import Link from "next/link";
 import { VacancyCount } from "../AdminDashboard/components/ShowApidatas/ShowUserAPiDatas";
-const page = () => {
+const Page = () => {
   const [vacancy, setVacancy] = useState([]);
   const getVacancy = async () => {
     try {
@@ -224,4 +224,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
