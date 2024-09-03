@@ -11,8 +11,10 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
 const Profile = () => {
-  const Header = dynamic(() => import("../components/Header"), { ssr: false });
-  const Sidebar = dynamic(() => import("../components/Sidebar"), {
+  const Header = dynamic(() => import("../components/Header.js"), {
+    ssr: false,
+  });
+  const Sidebar = dynamic(() => import("../components/Siderbar.js"), {
     ssr: false,
   });
   const userId = localStorage.getItem("userId");
