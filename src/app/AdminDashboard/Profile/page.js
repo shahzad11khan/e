@@ -21,9 +21,131 @@ const Profile = () => {
     Image: "",
   });
 
+  // const [imagePreview, setImagePreview] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [showConformPassword, setShowConformPassword] = useState(false);
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  // const handleImageChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     Image: e.target.files[0],
+  //   });
+  // };
+
+  // const API_URL = "/api/Users";
+
+  // const showalladmins = (userId) => {
+  //   axios
+  //     .get(`${API_URL}/${userId}`)
+  //     .then((res) => {
+  //       const adminData = res.data.Result;
+  //       console.log(adminData);
+  //       setFormData({
+  //         UserName: adminData.username,
+  //         Email: adminData.email,
+  //         Password: adminData.confirmpassword,
+  //         ConformPassword: adminData.confirmpassword,
+  //         Image: adminData.Image,
+  //       });
+  //       setImagePreview(adminData.Image);
+  //     })
+  //     .catch((error) => {
+  //       console.log(`error : ${error}`);
+  //     });
+  // };
+  // useEffect(() => {
+  //   // Check if user is authenticated
+  //   if (!isAuthenticated()) {
+  //     router.push("/AdminDashboard/Login"); // Redirect to login page if not authenticated
+  //     return;
+  //   }
+
+  //   const userId = localStorage.getItem("userId");
+  //   if (userId) {
+  //     showalladmins(userId);
+  //   }
+  // }, []);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const formDataToSend = new FormData();
+  //   formDataToSend.append("username", formData.UserName);
+  //   formDataToSend.append("email", formData.Email);
+  //   formDataToSend.append("password", formData.ConformPassword);
+  //   formDataToSend.append("confirmpassword", formData.ConformPassword);
+  //   if (formData.Image) {
+  //     formDataToSend.append(
+  //       "Image",
+  //       formData.Image ? formData.Image : imagePreview
+  //     );
+  //   }
+
+  //   if (formData.Password !== formData.ConformPassword) {
+  //     toast.warn("Password and ConfirmPassword is not match");
+  //     return;
+  //   }
+  //   console.log(
+  //     formData.UserName,
+  //     formData.Email,
+  //     formData.Password,
+  //     formData.ConformPassword,
+  //     formData.Image
+  //   );
+  //   try {
+  //     const response = await axios.put(`${API_URL}/${userId}`, formDataToSend, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+
+  //     if (response.status !== 200) {
+  //       throw new Error("Network response was not ok");
+  //     }
+
+  //     toast.success("Admin updated successfully");
+  //   } catch (error) {
+  //     console.error("Error updating admin:", error);
+  //     toast.error("Error updating admin");
+  //   }
+  // };
+
   const [imagePreview, setImagePreview] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConformPassword, setShowConformPassword] = useState(false);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      router.push("/AdminDashboard/Login"); // Redirect to login page if not authenticated
+      return;
+    }
+
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      showalladmins(userId);
+    }
+  }, []);
+
+  const showalladmins = async (userId) => {
+    try {
+      const res = await axios.get(`/api/Users/${userId}`);
+      const adminData = res.data.Result;
+      setFormData({
+        UserName: adminData.username,
+        Email: adminData.email,
+        Password: adminData.confirmpassword,
+        ConformPassword: adminData.confirmpassword,
+        Image: adminData.Image,
+      });
+      setImagePreview(adminData.Image);
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -34,74 +156,38 @@ const Profile = () => {
       ...formData,
       Image: e.target.files[0],
     });
+    setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
-  const API_URL = "/api/Users";
-
-  const showalladmins = () => {
-    axios
-      .get(`${API_URL}/${userId}`)
-      .then((res) => {
-        const adminData = res.data.Result;
-        console.log(adminData);
-        setFormData({
-          UserName: adminData.username,
-          Email: adminData.email,
-          Password: adminData.confirmpassword,
-          ConformPassword: adminData.confirmpassword,
-          Image: adminData.Image,
-        });
-        setImagePreview(adminData.Image);
-      })
-      .catch((error) => {
-        console.log(`error : ${error}`);
-      });
-  };
-  useEffect(() => {
-    // Check if user is authenticated
-    if (!isAuthenticated()) {
-      router.push("/AdminDashboard/Login"); // Redirect to login page if not authenticated
-      return;
-    }
-    showalladmins();
-  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.Password !== formData.ConformPassword) {
+      toast.warn("Password and Confirm Password do not match");
+      return;
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append("username", formData.UserName);
     formDataToSend.append("email", formData.Email);
     formDataToSend.append("password", formData.ConformPassword);
     formDataToSend.append("confirmpassword", formData.ConformPassword);
     if (formData.Image) {
-      formDataToSend.append(
-        "Image",
-        formData.Image ? formData.Image : imagePreview
-      );
+      formDataToSend.append("Image", formData.Image);
     }
 
-    if (formData.Password !== formData.ConformPassword) {
-      toast.warn("Password and ConfirmPassword is not match");
-      return;
-    }
-    console.log(
-      formData.UserName,
-      formData.Email,
-      formData.Password,
-      formData.ConformPassword,
-      formData.Image
-    );
     try {
-      const response = await axios.put(`${API_URL}/${userId}`, formDataToSend, {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.put(`/api/Users/${userId}`, formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      if (response.status !== 200) {
+      if (response.status === 200) {
+        toast.success("Admin updated successfully");
+      } else {
         throw new Error("Network response was not ok");
       }
-
-      toast.success("Admin updated successfully");
     } catch (error) {
       console.error("Error updating admin:", error);
       toast.error("Error updating admin");
