@@ -6,7 +6,7 @@ import Image from "next/image";
 import Contactform from "../Utils/Contactform";
 import { ProjectsCount } from "../AdminDashboard/components/ShowApidatas/ShowUserAPiDatas";
 
-const page = () => {
+const Page = () => {
   const [Projects, setProjects] = useState([]);
   // const [category, setCategory] = useState("All");
   const [getitem, setgetitem] = useState(null);
@@ -225,4 +225,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
