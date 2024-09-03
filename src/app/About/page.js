@@ -8,7 +8,7 @@ import Link from "next/link";
 import { FaGithubSquare } from "react-icons/fa";
 import { TeamCount } from "../AdminDashboard/components/ShowApidatas/ShowUserAPiDatas";
 
-const page = () => {
+const Page = () => {
   const [employees, setemployees] = useState([]);
 
   useEffect(() => {
@@ -435,4 +435,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
