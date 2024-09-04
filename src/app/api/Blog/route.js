@@ -2,6 +2,7 @@ const { connect } = require("@/app/config/db");
 const { default: BlogModel } = require("@/app/models/BlogModel");
 const { writeFile } = require("fs/promises");
 const { NextResponse } = require("next/server");
+import path from "path";
 
 // post team
 const uploadsDir = path.join(process.cwd(), "public", "uploads");
