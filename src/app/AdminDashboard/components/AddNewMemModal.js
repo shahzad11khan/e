@@ -71,6 +71,7 @@ const AddNewMemModal = ({ isclose }) => {
         formDataToSend
       );
 
+      console.log(response.data);
       if (!response.data.success) {
         throw new Error(
           response.data.message || "Failed to create team member"
@@ -82,6 +83,7 @@ const AddNewMemModal = ({ isclose }) => {
       }
     } catch (error) {
       toast.error(error.message || "Failed to create admin");
+      console.log(error);
     }
   };
   //
