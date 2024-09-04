@@ -72,7 +72,10 @@ const AddNewBlogModal = ({ isclose, reload }) => {
         formData.image
       );
 
-      const response = await axios.post("/api/Blog", formDataToSend);
+      const response = await axios.post(
+        "https://e-omega-inky.vercel.app/api/Blog",
+        formDataToSend
+      );
 
       if (!response.data.success) {
         throw new Error(
