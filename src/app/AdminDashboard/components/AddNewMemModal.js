@@ -66,6 +66,16 @@ const AddNewMemModal = ({ isclose }) => {
         formDataToSend.append("image", formData.file);
       }
 
+      console.log("Sending the following data:");
+      console.log({
+        UserName: formData.UserName,
+        Email: formData.Email,
+        datetime: formData.datetime,
+        Designation: formData.Designation,
+        LinkedIn: formData.LinkedIn,
+        Github: formData.Github,
+        image: formData.image,
+      });
       const response = await axios.post(
         "https://e-omega-inky.vercel.app/api/Team",
         formDataToSend
