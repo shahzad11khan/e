@@ -8,4 +8,4 @@ export const API_URL_Vacancy_Delete = "/api/Vacancies";
 export const API_URL_GetInTouch = "/api/GetInTouch";
 export const API_URL_Request = "/api/RequestForJoining";
 export const API_URL_Projects = "/api/Project";
-export const API_URL_Blog = "/api/Blog";
+export const API_URL_Blog = "https://e-omega-inky.vercel.app/api/Blog";
