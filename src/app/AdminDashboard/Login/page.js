@@ -21,23 +21,32 @@ const Login = () => {
     e.preventDefault();
     try {
       setloading(true);
+
       const response = await axios.post(
-        "https://e-omega-inky.vercel.app/api/Users/login",
+        "http://localhost:3000/api/Users/login", // Ensure this API route exists and is properly defined
         userlogin,
         {
-          timeout: 100000,
+          timeout: 10000, // Reduce timeout to a reasonable value
         }
       );
-      console.log("login successfully", response.data);
-      const isVerfied = response.data.isVerfied;
+
+      console.log("Login successful", response.data);
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
+
       toast.success("Login successfully");
-      router.push("https://e-omega-inky.vercel.app/AdminDashboard/Home");
-      // if (isVerfied === true) {
+
+      // Use a relative path for navigation
+      router.push("/AdminDashboard/Home");
+
+      // If using verification, uncomment the following code
+      // const isVerified = response.data.isVerified;
+      // if (isVerified) {
+      //   router.push("/AdminDashboard/Home");
       // } else {
-      //   toast.warning("You Are Not Verify For Login😢");
-      //   router.push("https://e-omega-inky.vercel.app/AdminDashboard/Login");
+      //   toast.warning("You are not verified for login😢");
+      //   router.push("/AdminDashboard/Login");
       // }
     } catch (error) {
       toast.error("Something went wrong");
