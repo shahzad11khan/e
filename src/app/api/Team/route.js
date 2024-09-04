@@ -37,6 +37,7 @@ export async function POST(Request) {
       filename = "default-image.png"; // Replace with your default image name
     }
     // Iterate over form data entries
+    const formDataObject = {};
     for (const [key, value] of data.entries()) {
       // Assign each field to the formDataObject
       formDataObject[key] = value;

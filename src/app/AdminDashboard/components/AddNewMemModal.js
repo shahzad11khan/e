@@ -70,11 +70,10 @@ const AddNewMemModal = ({ isclose }) => {
       console.log({
         UserName: formData.UserName,
         Email: formData.Email,
-        datetime: formData.datetime,
         Designation: formData.Designation,
         LinkedIn: formData.LinkedIn,
         Github: formData.Github,
-        image: formData.image,
+        image: formData.file,
       });
       const response = await axios.post(
         "https://e-omega-inky.vercel.app/api/Team",
