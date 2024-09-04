@@ -22,7 +22,7 @@ const Login = () => {
     try {
       setloading(true);
       const response = await axios.post(
-        "https://encodersadsa.netlify.app/api/Users/login",
+        "https://e-omega-inky.vercel.app/api/Users/login",
         userlogin
       );
       console.log("login successfully", response.data);
