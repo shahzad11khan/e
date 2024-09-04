@@ -64,31 +64,36 @@ const AddNewBlogModal = ({ isclose, reload }) => {
         formDataToSend.append("image", formData.image);
       }
 
-      console.log(
-        formData.blogtitle,
-        formData.author,
-        formData.datetime,
-        formData.description,
-        formData.image
-      );
+      console.log("Sending the following data:");
+      console.log({
+        blogtitle: formData.blogtitle,
+        author: formData.author,
+        datetime: formData.datetime,
+        description: formData.description,
+        image: formData.image,
+      });
 
       const response = await axios.post(
         "https://e-omega-inky.vercel.app/api/Blog",
         formDataToSend
       );
 
+      console.log("Response from server:", response);
+
       if (!response.data.success) {
-        throw new Error(response || "Failed to create blog");
+        throw new Error(response.data.message || "Failed to create blog");
       } else {
         reload();
         isclose(); // Close the popup window
-        toast.success("Project created successfully!");
+        toast.success("Blog created successfully!");
+        console.log("Blog created successfully!");
       }
     } catch (error) {
-      toast.error(error || "Failed to create admin");
-      console.log(error);
+      toast.error(error.message || "Failed to create blog");
+      console.error("Error creating blog:", error);
     }
   };
+
   return (
     <div
       ref={modalRef}
