@@ -2,12 +2,15 @@ const { connect } = require("@/app/config/db");
 const { default: Team } = require("@/app/models/TeamModel");
 const { NextResponse } = require("next/server");
 import { writeFile } from "fs/promises";
+import path from "path";
 // export const config = {
 //   api: {
 //     bodyParser: false,
 //   },
 // };
 // post team
+const uploadsDir = path.join(process.cwd(), "public", "uploads");
+
 export async function POST(Request) {
   try {
     await connect();
@@ -15,18 +18,24 @@ export async function POST(Request) {
     console.log(data);
 
     const file = data.get("image");
-    const filename = file.name;
-    console.log(filename);
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
+    let filename = "";
 
-    // const filePath = `./public/uploads/${file.name}`;
+    if (file) {
+      filename = file.name;
+      console.log(filename);
 
-    const filePath = `./public/uploads/${file.name}`;
+      const filePath = path.join(uploadsDir, filename);
+      console.log(`File path: ${filePath}`);
 
-    await writeFile(filePath, buffer);
-    const formDataObject = {};
+      const byteData = await file.arrayBuffer();
+      const buffer = Buffer.from(byteData);
 
+      // Ensure the uploads directory exists
+      await writeFile(filePath, buffer);
+    } else {
+      // Use a default image if no file is uploaded
+      filename = "default-image.png"; // Replace with your default image name
+    }
     // Iterate over form data entries
     for (const [key, value] of data.entries()) {
       // Assign each field to the formDataObject
