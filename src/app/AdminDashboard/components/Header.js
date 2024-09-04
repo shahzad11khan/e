@@ -41,7 +41,7 @@ const Header = () => {
 
   const handleLogout = useCallback(async () => {
     try {
-      await axios.get("/api/Users/logout");
+      await axios.get("/api/Users/logout", { timeout: 10000 });
     } catch (error) {
       console.error(`Error logging out: ${error.message}`);
     }
