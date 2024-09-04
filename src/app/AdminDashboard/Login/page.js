@@ -21,7 +21,10 @@ const Login = () => {
     e.preventDefault();
     try {
       setloading(true);
-      const response = await axios.post("/api/Users/login", userlogin);
+      const response = await axios.post(
+        "https://e-omega-inky.vercel.app/api/Users/login",
+        userlogin
+      );
       console.log("login successfully", response.data);
       const isVerfied = response.data.isVerfied;
       if (isVerfied === true) {
