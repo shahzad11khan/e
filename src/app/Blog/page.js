@@ -70,19 +70,19 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <Image
+              {/* <Image
                 src={`/uploads/${blogData.image}`}
                 alt={blogData.image}
                 width={468}
                 height={358}
                 className="h-60"
-              />
+              /> */}
               <div className="mt-8">
                 <h2 className="text-3xl font-semibold mb-3">
-                  {blogData.blogtitle}
+                  {blogData.title}
                 </h2>
 
-                <div className="w-11/12">
+                {/* <div className="w-11/12">
                   <div className="flex items-center justify-between">
                     <Image
                       src={`/uploads/${blogData.image}`}
@@ -123,7 +123,7 @@ const Page = () => {
                   >
                     {expandedBlogs[blogData._id] ? "Show Less" : "Load More"}
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
