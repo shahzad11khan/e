@@ -23,11 +23,9 @@ const Login = () => {
       setloading(true);
 
       const response = await axios.post(
-        "http://localhost:3000/api/Users/login", // Ensure this API route exists and is properly defined
-        userlogin,
-        {
-          timeout: 10000, // Reduce timeout to a reasonable value
-        }
+        // "/api/Users/login",
+        "https://e-omega-inky.vercel.app/api/Users/login"
+        // Ensure this API route exists and is properly defined
       );
 
       console.log("Login successful", response.data);
