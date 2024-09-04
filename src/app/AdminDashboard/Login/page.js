@@ -23,20 +23,20 @@ const Login = () => {
       setloading(true);
       const response = await axios.post(
         "https://e-omega-inky.vercel.app/api/Users/login",
-        userlogin
-        // { timeout: 10000 }
+        userlogin,
+        { timeout: 3000 }
       );
       console.log("login successfully", response.data);
       const isVerfied = response.data.isVerfied;
-      if (isVerfied === true) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("userId", response.data.userId);
-        toast.success("Login successfully");
-        router.push("https://e-omega-inky.vercel.app//AdminDashboard/Home");
-      } else {
-        toast.warning("You Are Not Verify For Login😢");
-        router.push("https://e-omega-inky.vercel.app/AdminDashboard/Login");
-      }
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.userId);
+      toast.success("Login successfully");
+      router.push("https://e-omega-inky.vercel.app/AdminDashboard/Home");
+      // if (isVerfied === true) {
+      // } else {
+      //   toast.warning("You Are Not Verify For Login😢");
+      //   router.push("https://e-omega-inky.vercel.app/AdminDashboard/Login");
+      // }
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
