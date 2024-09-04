@@ -78,7 +78,7 @@ const AddNewBlogModal = ({ isclose, reload }) => {
         formDataToSend
       );
 
-      console.log("Response from server:", response);
+      console.log("Response from server:", response.data);
 
       if (!response.data.success) {
         throw new Error(response.data.message || "Failed to create blog");
