@@ -85,7 +85,6 @@ import { sendEmail } from "@/app/helper/mailer";
 import { writeFile } from "fs/promises";
 import path from "path";
 
-// Construct the file path relative to the public/uploads directory
 const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
 export async function POST(Request) {
@@ -95,22 +94,24 @@ export async function POST(Request) {
     console.log(data);
 
     const file = data.get("Image");
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded", status: 400 });
+    let filename = "";
+
+    if (file) {
+      filename = file.name;
+      console.log(filename);
+
+      const filePath = path.join(uploadsDir, filename);
+      console.log(`File path: ${filePath}`);
+
+      const byteData = await file.arrayBuffer();
+      const buffer = Buffer.from(byteData);
+
+      // Ensure the uploads directory exists
+      await writeFile(filePath, buffer);
+    } else {
+      // Use a default image if no file is uploaded
+      filename = "default-image.png"; // Replace with your default image name
     }
-
-    const filename = file.name;
-    console.log(filename);
-
-    // Construct the full file path for saving
-    const filePath = path.join(uploadsDir, filename);
-    console.log(`File path: ${filePath}`);
-
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
-
-    // Ensure the uploads directory exists
-    await writeFile(filePath, buffer);
 
     const formDataObject = {};
     for (const [key, value] of data.entries()) {
