@@ -93,8 +93,8 @@ export const BlogsCount = () => {
   return axios
     .get(`${API_URL_Blog}`)
     .then((res) => {
-      console.log(res.data.Result);
-      console.log(res.data.count);
+      // console.log(res.data.Result);
+      // console.log(res.data.count);
       return { admins: res.data.Result, count: res.data.count };
     })
     .catch((error) => {
