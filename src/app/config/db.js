@@ -22,8 +22,11 @@
 import mongoose from "mongoose";
 
 export async function connect() {
+  const MONGODB_URI =
+    process.env.MONGODB_URI || "your-mongodb-uri?connectTimeoutMS=30000";
+
   try {
-    mongoose.connect(process.env.MONGO_URI);
+    mongoose.connect(MONGODB_URI);
     const connection = mongoose.connection;
 
     connection.on("connected", () => {
