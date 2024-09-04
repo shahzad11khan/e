@@ -5,7 +5,6 @@ const { NextResponse } = require("next/server");
 import path from "path";
 
 // post team
-const uploadsDir = path.join(process.cwd(), "public", "uploads");
 export async function POST(Request) {
   try {
     await connect();
@@ -19,24 +18,29 @@ export async function POST(Request) {
       filename = file.name;
       console.log(filename);
 
+      // Ensure the uploads directory exists
+      const uploadsDir = path.join(process.cwd(), "public", "uploads");
+
       const filePath = path.join(uploadsDir, filename);
       console.log(`File path: ${filePath}`);
 
       const byteData = await file.arrayBuffer();
       const buffer = Buffer.from(byteData);
 
-      // Ensure the uploads directory exists
       await writeFile(filePath, buffer);
     } else {
       // Use a default image if no file is uploaded
       filename = "default-image.png"; // Replace with your default image name
     }
 
+    // Create an object to store form data
+    const formDataObject = {};
     // Iterate over form data entries
     for (const [key, value] of data.entries()) {
       // Assign each field to the formDataObject
       formDataObject[key] = value;
     }
+
     const { blogtitle, author, datetime, description } = formDataObject;
 
     console.log(blogtitle, author, datetime, description);
@@ -74,7 +78,6 @@ export async function POST(Request) {
     return NextResponse.json({ error: error.message, status: 500 });
   }
 }
-
 // get all team members
 export async function GET() {
   try {
