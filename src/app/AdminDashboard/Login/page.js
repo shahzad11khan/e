@@ -31,14 +31,11 @@ const Login = () => {
       if (isVerfied === true) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userId", response.data.userId);
-        // localStorage.setItem("isVerfied", response.data.userId);
-        // localStorage.setItem("username", response.data.username);
-        // localStorage.setItem("email", response.data.email);
         toast.success("Login successfully");
-        router.push("/AdminDashboard/Home");
+        router.push("https://e-omega-inky.vercel.app//AdminDashboard/Home");
       } else {
         toast.warning("You Are Not Verify For Login😢");
-        router.push("/AdminDashboard/Login");
+        router.push("https://e-omega-inky.vercel.app/AdminDashboard/Login");
       }
     } catch (error) {
       toast.error("Something went wrong");
