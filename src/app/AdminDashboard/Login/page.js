@@ -21,9 +21,13 @@ const Login = () => {
     e.preventDefault();
     try {
       setloading(true);
-      const response = await axios.post("/api/Users/login", userlogin, {
-        timeout: 3000,
-      });
+      const response = await axios.post(
+        "https://e-omega-inky.vercel.app/api/Users/login",
+        userlogin,
+        {
+          timeout: 100000,
+        }
+      );
       console.log("login successfully", response.data);
       const isVerfied = response.data.isVerfied;
       localStorage.setItem("token", response.data.token);
