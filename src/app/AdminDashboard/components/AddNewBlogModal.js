@@ -78,16 +78,14 @@ const AddNewBlogModal = ({ isclose, reload }) => {
       );
 
       if (!response.data.success) {
-        throw new Error(
-          response.data.message || "Failed to create team member"
-        );
+        throw new Error(response || "Failed to create blog");
       } else {
         reload();
         isclose(); // Close the popup window
         toast.success("Project created successfully!");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to create admin");
+      toast.error(error || "Failed to create admin");
     }
   };
   return (
