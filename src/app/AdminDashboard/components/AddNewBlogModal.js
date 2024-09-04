@@ -86,6 +86,7 @@ const AddNewBlogModal = ({ isclose, reload }) => {
       }
     } catch (error) {
       toast.error(error || "Failed to create admin");
+      console.log(error);
     }
   };
   return (
