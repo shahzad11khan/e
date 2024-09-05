@@ -28,24 +28,23 @@ const Login = () => {
         // Ensure this API route exists and is properly defined
       );
 
-      console.log("Login successful", response.data);
-
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userId", response.data.userId);
-
-      toast.success("Login successfully");
-
-      // Use a relative path for navigation
-      router.push("/AdminDashboard/Home");
+      console.log("Login successful", response);
 
       // If using verification, uncomment the following code
-      // const isVerified = response.data.isVerified;
-      // if (isVerified) {
-      //   router.push("/AdminDashboard/Home");
-      // } else {
-      //   toast.warning("You are not verified for login😢");
-      //   router.push("/AdminDashboard/Login");
-      // }
+      const isVerified = response.data.isVerified;
+      if (isVerified) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("userId", response.data.userId);
+
+        toast.success("Login successfully");
+
+        // Use a relative path for navigation
+        // router.push("/AdminDashboard/Home");
+        router.push("/AdminDashboard/Home");
+      } else {
+        toast.warning("You are not verified for login😢");
+        router.push("/AdminDashboard/Login");
+      }
     } catch (error) {
       toast.error("Something went wrong");
     } finally {
