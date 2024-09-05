@@ -19,33 +19,36 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setloading(true);
 
-      const response = await axios.post(
-        // "/api/Users/login",
-        "https://e-omega-inky.vercel.app/api/Users/login"
-        // Ensure this API route exists and is properly defined
-      );
+      // Use relative path for the API route
+      const response = await axios.post("/api/Users/login", {
+        // Assuming you're sending data in the request body
+        email: email, // Replace with your email input state
+        password: password, // Replace with your password input state
+      });
 
       console.log("Login successful", response);
 
       // If using verification, uncomment the following code
       const isVerified = response.data.isVerified;
       if (isVerified) {
+        // Store token and userId in localStorage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userId", response.data.userId);
 
         toast.success("Login successfully");
 
         // Use a relative path for navigation
-        // router.push("/AdminDashboard/Home");
         router.push("/AdminDashboard/Home");
       } else {
-        toast.warning("You are not verified for login😢");
-        router.push("/AdminDashboard/Login");
+        toast.warning("You are not verified for login 😢");
+        // Keep the user on the login page to avoid unnecessary redirects
       }
     } catch (error) {
+      console.error("Login error:", error); // Better error logging
       toast.error("Something went wrong");
     } finally {
       setloading(false);
