@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import Top from "../Utils/Top";
 import Image from "next/image";
 import { BlogsCount } from "../AdminDashboard/components/ShowApidatas/ShowUserAPiDatas";
-import { url } from "../AdminDashboard/components/ShowApidatas/apiUrls";
 
 const Page = () => {
   const [blogs, setBlog] = useState([]);
-  const [image, setImageData] = useState([]);
   const [expandedBlogs, setExpandedBlogs] = useState({});
 
   const toggleContent = (blogId) => {
@@ -22,18 +20,10 @@ const Page = () => {
   }, []);
   const getProjects = async () => {
     try {
-      // const { admins } = await BlogsCount();
-      // console.log("data here");
-      // console.log(admins);
-      // setBlog(admins);
-      fetch(`${url}/api/Blog`)
-        .then((response) => response.json())
-        .then((data) => {
-          setImageData(data.result.image);
-          console.log(data.result);
-          setBlog(data.result);
-        })
-        .catch((error) => console.error("Error fetching image:", error));
+      const { admins } = await BlogsCount();
+      console.log("data here");
+      console.log(admins);
+      setBlog(admins);
     } catch (error) {
       console.log(`Failed to fetch blog: ${error}`);
     }
@@ -81,14 +71,14 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <img
-                src={`data:image/png;base64,${image}`}
-                // src={`${blogData.image}`}
+              <Image
+                src={`data:image/jpeg;base64,${blogData.image}`} // Adjust the MIME type if needed
                 alt={blogData.blogtitle}
-                // width={468}
-                // height={358}
+                width={468}
+                height={358}
                 className="h-60"
               />
+
               <div className="mt-8">
                 <h2 className="text-3xl font-semibold mb-3">
                   {blogData.blogtitle}
