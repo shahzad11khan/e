@@ -78,13 +78,17 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <Image
+              {/* <Image
                 // src={`${blogData.image}`}
                 src={`data:image/png;base64,${blogData.image}`}
                 alt={blogData.blogtitle}
                 width={468}
                 height={358}
                 className="h-60"
+              /> */}
+              <img
+                src={`data:image/png;base64,${blogData.image}`}
+                alt="Fetched"
               />
               <div className="mt-8">
                 <h2 className="text-3xl font-semibold mb-3">
