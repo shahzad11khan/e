@@ -24,10 +24,16 @@ const Login = () => {
       setloading(true);
 
       // Use relative path for the API route
-      const response = await axios.post("/api/Users/login", {
-        email: userlogin.email, // Access email from state
-        password: userlogin.password, // Access password from state
-      });
+      const response = await axios.post(
+        "/api/Users/login",
+        {
+          email: userlogin.email, // Access email from state
+          password: userlogin.password, // Access password from state
+        },
+        {
+          timeout: 10000, // Set timeout to 10 seconds
+        }
+      );
 
       console.log("Login successful", response);
 
