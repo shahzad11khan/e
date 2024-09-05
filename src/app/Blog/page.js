@@ -21,9 +21,9 @@ const Page = () => {
   const getProjects = async () => {
     BlogsCount()
       .then((data) => {
-        console.log(data);
+        console.log(data.admins);
 
-        setBlog(data);
+        setBlog(data.admins);
       })
       .catch((error) => {
         console.error("Error fetching blogs:", error);
