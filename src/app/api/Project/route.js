@@ -22,7 +22,7 @@ export async function POST(Request) {
     const buffer = Buffer.from(byteData);
 
     // const filePath = `./uploads/${file.name}`;
-    const filePath = `./public/uploads/${file.name}`;
+    const filePath = `https://e-omega-inky.vercel.app/public/uploads/${file.name}`;
 
     await writeFile(filePath, buffer);
     const formDataObject = {};
