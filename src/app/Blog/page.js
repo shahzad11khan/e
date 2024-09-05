@@ -21,7 +21,7 @@ const Page = () => {
   const getProjects = async () => {
     try {
       const { admins } = await BlogsCount();
-      console.log(admins.Image);
+      console.log("data here ", admins);
       setBlog(admins);
     } catch (error) {
       console.log(`Failed to fetch blog: ${error}`);
