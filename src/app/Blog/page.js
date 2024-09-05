@@ -28,7 +28,7 @@ const Page = () => {
         .get(`${url}/api/Blog`) // Sample API URL
         .then((response) => {
           setBlog(response.data.result); // Set the data from the response
-          console.log(response.data.result); // Set the data from the response
+          console.log(response.data.result.image); // Set the data from the response
           // setLoading(false); // Set loading to false
         });
     } catch (error) {
@@ -79,7 +79,8 @@ const Page = () => {
               key={blogData._id}
             >
               <Image
-                src={`${blogData.image}`}
+                // src={`${blogData.image}`}
+                src={`data:image/png;base64,${blogData.image}`}
                 alt={blogData.blogtitle}
                 width={468}
                 height={358}
