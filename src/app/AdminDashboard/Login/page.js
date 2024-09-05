@@ -25,11 +25,13 @@ const Login = () => {
 
       // Use relative path for the API route
       const response = await axios.post(
-        "https://e-beta-roan.vercel.app/api/Users/login",
+        "/api/Users/login",
         {
-          // Assuming you're sending data in the request body
           email: userlogin.email, // Access email from state
           password: userlogin.password, // Access password from state
+        },
+        {
+          timeout: 10000, // Set timeout to 10 seconds
         }
       );
 
