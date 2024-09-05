@@ -1,60 +1,123 @@
+// // import jwt from "jsonwebtoken";
+// // import bcryptjs from "bcryptjs";
+// // import User from "@/app/models/UserModel";
+// // import { NextResponse } from "next/server";
+
+// // export async function POST(Request) {
+// //   try {
+// //     const { email, password } = await Request.json();
+// //     console.log(email, password);
+// //     // Validate the JSON structure or required fields here if needed
+
+// //     // Find user by email
+// //     const user = await User.findOne({ email }).exec();
+
+// //     // Check if user exists
+// //     if (!user) {
+// //       return NextResponse.json({
+// //         error: "Invalid credentials",
+// //         status: 401,
+// //       });
+// //     }
+// //     console.log("User Exits");
+
+// //     // Validate password
+// //     const isPasswordValid = await bcryptjs.compare(password, user.password);
+
+// //     if (!isPasswordValid) {
+// //       return NextResponse.json({
+// //         error: "Invalid credentials",
+// //         status: 401,
+// //       });
+// //     }
+
+// //     // Generate JWT token
+// //     const token = jwt.sign(
+// //       { userId: user._id, username: user.username, email: user.email },
+// //       process.env.JWT_SECRET,
+// //       {
+// //         expiresIn: "1y", // Token expires in 1 hour
+// //       }
+// //     );
+
+// //     const response = NextResponse.json({
+// //       token,
+// //       userId: user._id,
+// //       username: user.username,
+// //       email: user.email,
+// //       isVerfied: user.isVerfied,
+// //       message: "Login successful",
+// //       status: 200,
+// //     });
+// //     response.cookies.set("token", token, {
+// //       httpOnly: true,
+// //     });
+// //     return response;
+// //   } catch (error) {
+// //     console.error(error);
+// //     return NextResponse.json({ error: "Internal server error", status: 500 });
+// //   }
+// // }
+
 // import jwt from "jsonwebtoken";
-// import bcryptjs from "bcryptjs";
+// import bcrypt from "bcryptjs";
 // import User from "@/app/models/UserModel";
 // import { NextResponse } from "next/server";
 
-// export async function POST(Request) {
+// export async function POST(request) {
 //   try {
-//     const { email, password } = await Request.json();
-//     console.log(email, password);
-//     // Validate the JSON structure or required fields here if needed
+//     const { email, password } = await request.json();
+//     console.log("Received email and password:", email, password);
+
+//     // Check if all required fields are present
+//     if (!email || !password) {
+//       return NextResponse.json({
+//         error: "Email and password are required",
+//         status: 400,
+//       });
+//     }
 
 //     // Find user by email
 //     const user = await User.findOne({ email }).exec();
-
-//     // Check if user exists
 //     if (!user) {
-//       return NextResponse.json({
-//         error: "Invalid credentials",
-//         status: 401,
-//       });
+//       return NextResponse.json({ error: "Invalid credentials", status: 401 });
 //     }
-//     console.log("User Exits");
+//     console.log("User exists");
 
 //     // Validate password
-//     const isPasswordValid = await bcryptjs.compare(password, user.password);
-
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
 //     if (!isPasswordValid) {
-//       return NextResponse.json({
-//         error: "Invalid credentials",
-//         status: 401,
-//       });
+//       return NextResponse.json({ error: "Invalid credentials", status: 401 });
 //     }
 
 //     // Generate JWT token
 //     const token = jwt.sign(
 //       { userId: user._id, username: user.username, email: user.email },
 //       process.env.JWT_SECRET,
-//       {
-//         expiresIn: "1y", // Token expires in 1 hour
-//       }
+//       { expiresIn: "1y" }
 //     );
 
+//     // Create response
 //     const response = NextResponse.json({
 //       token,
 //       userId: user._id,
 //       username: user.username,
 //       email: user.email,
-//       isVerfied: user.isVerfied,
+//       isVerified: user.isVerified, // Fixed typo: isVerfied to isVerified
 //       message: "Login successful",
 //       status: 200,
 //     });
+
+//     // Set cookie
 //     response.cookies.set("token", token, {
 //       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production", // Secure in production
+//       sameSite: "Strict", // Adjust based on your needs
 //     });
+
 //     return response;
 //   } catch (error) {
-//     console.error(error);
+//     console.error("Login error:", error);
 //     return NextResponse.json({ error: "Internal server error", status: 500 });
 //   }
 // }
@@ -66,11 +129,14 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
   try {
+    console.log("Login API called");
+
     const { email, password } = await request.json();
     console.log("Received email and password:", email, password);
 
     // Check if all required fields are present
     if (!email || !password) {
+      console.log("Missing email or password");
       return NextResponse.json({
         error: "Email and password are required",
         status: 400,
@@ -80,15 +146,18 @@ export async function POST(request) {
     // Find user by email
     const user = await User.findOne({ email }).exec();
     if (!user) {
+      console.log("User not found");
       return NextResponse.json({ error: "Invalid credentials", status: 401 });
     }
-    console.log("User exists");
+    console.log("User found:", user);
 
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log("Password is invalid");
       return NextResponse.json({ error: "Invalid credentials", status: 401 });
     }
+    console.log("Password is valid");
 
     // Generate JWT token
     const token = jwt.sign(
@@ -96,28 +165,28 @@ export async function POST(request) {
       process.env.JWT_SECRET,
       { expiresIn: "1y" }
     );
+    console.log("JWT token generated:", token);
 
-    // Create response
     const response = NextResponse.json({
       token,
       userId: user._id,
       username: user.username,
       email: user.email,
-      isVerified: user.isVerified, // Fixed typo: isVerfied to isVerified
+      isVerified: user.isVerified,
       message: "Login successful",
       status: 200,
     });
 
-    // Set cookie
     response.cookies.set("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Secure in production
-      sameSite: "Strict", // Adjust based on your needs
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
     });
 
+    console.log("Login successful, returning response");
     return response;
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login process error:", error.message, error.stack);
     return NextResponse.json({ error: "Internal server error", status: 500 });
   }
 }
