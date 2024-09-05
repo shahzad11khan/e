@@ -25,13 +25,10 @@ const Login = () => {
 
       // Use relative path for the API route
       const response = await axios.post(
-        "/api/Users/login",
+        "https://encodder.netlify.app/api/Users/login",
         {
           email: userlogin.email, // Access email from state
           password: userlogin.password, // Access password from state
-        },
-        {
-          timeout: 10000, // Set timeout to 10 seconds
         }
       );
 
