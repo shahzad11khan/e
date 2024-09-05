@@ -162,6 +162,7 @@ export async function GET() {
   try {
     await connect();
     const All_Blog = await BlogModel.find();
+    console.log(All_Blog);
     const BlogCount = await BlogModel.countDocuments();
     if (!All_Blog || All_Blog.length === 0) {
       return NextResponse.json({ Result: All_Blog });
