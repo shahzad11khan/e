@@ -71,8 +71,8 @@ const Page = () => {
               key={blogData._id}
             >
               <Image
-                src={`/uploads/${blogData.image}`}
-                alt={blogData.image}
+                src={`${blogData.image}`}
+                alt={blogData.blogtitle}
                 width={468}
                 height={358}
                 className="h-60"
