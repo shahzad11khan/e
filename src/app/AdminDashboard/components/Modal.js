@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "./ShowApidatas/apiUrls";
 
 const Modal = ({ isclose, getadmins }) => {
   const modalRef = useRef();
@@ -64,7 +65,12 @@ const Modal = ({ isclose, getadmins }) => {
         formDataToSend.append("Image", formData.file);
       }
 
-      const response = await axios.post("/api/Users/singup", formDataToSend);
+      const response = await axios.post(
+        `${url}/api/Users/singup`,
+        formDataToSend
+      );
+
+      console.log(response.data);
 
       if (!response.data.success) {
         throw new Error(response.data.message || "Failed to create admin");
