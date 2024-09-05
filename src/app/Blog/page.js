@@ -19,13 +19,15 @@ const Page = () => {
     getProjects();
   }, []);
   const getProjects = async () => {
-    try {
-      const { admins } = await BlogsCount();
-      console.log("data here ", admins.image);
-      setBlog(admins);
-    } catch (error) {
-      console.log(`Failed to fetch blog: ${error}`);
-    }
+    BlogsCount()
+      .then((data) => {
+        console.log(data);
+
+        setBlog(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching blogs:", error);
+      });
   };
 
   return (
@@ -70,12 +72,10 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <Image
-                src={`${blogData.image}`}
-                alt={blogData.blogtitle}
-                width={468}
-                height={358}
-                className="h-60"
+              <img
+                src={`data:image/png;base64,${blogData.image}`}
+                alt="Blog Image"
+                style={{ width: "200px", height: "200px" }}
               />
               <div className="mt-8">
                 <h2 className="text-3xl font-semibold mb-3">
