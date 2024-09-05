@@ -61,6 +61,13 @@ const AddNewProModal = ({ isclose, getallprojects }) => {
       if (formData.file) {
         formDataToSend.append("Image", formData.file);
       }
+      const data = {
+        ProjectName: formData.ProName,
+        ProjectCategory: formData.ProCategory,
+        ProjectDescription: formData.ProDiscription,
+        Image: formData.file,
+      };
+      console.log(data);
 
       const response = await axios.post(
         "https://e-omega-inky.vercel.app/api/Project",

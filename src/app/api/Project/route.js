@@ -9,38 +9,88 @@ const { NextResponse } = require("next/server");
 // };
 
 // post team
+// export async function POST(Request) {
+//   try {
+//     await connect();
+//     const data = await Request.formData();
+//     console.log(data);
+
+//     const file = data.get("Image");
+//     const filename = file.name;
+//     console.log(filename);
+//     const byteData = await file.arrayBuffer();
+//     const buffer = Buffer.from(byteData);
+
+//     // const filePath = `./uploads/${file.name}`;
+//     const filePath = `https://e-omega-inky.vercel.app/public/uploads/${file.name}`;
+
+//     await writeFile(filePath, buffer);
+//     const formDataObject = {};
+
+//     // Iterate over form data entries
+//     for (const [key, value] of data.entries()) {
+//       // Assign each field to the formDataObject
+//       formDataObject[key] = value;
+//     }
+//     const { ProjectName, ProjectCategory, ProjectDescription } = formDataObject;
+
+//     console.log(ProjectName, ProjectCategory);
+
+//     const existingProjectName = await Project.findOne({ ProjectName });
+
+//     if (existingProjectName) {
+//       return NextResponse.json({
+//         error: "project already exists",
+//         status: 400,
+//       });
+//     }
+
+//     const Post_Project = new Project({
+//       ProjectName,
+//       ProjectCategory,
+//       ProjectDescription,
+//       Image: filename,
+//     });
+
+//     const Save_Project = await Post_Project.save();
+//     console.log(Save_Project);
+//     if (!Save_Project) {
+//       return NextResponse.json({ message: "Team Member Not added" });
+//     } else {
+//       return NextResponse.json({
+//         message: "Team Member created successfully",
+//         success: true,
+//         status: 200,
+//       });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ error: error.message, status: 500 });
+//   }
+// }
+
 export async function POST(Request) {
   try {
     await connect();
     const data = await Request.formData();
-    console.log(data);
 
     const file = data.get("Image");
-    const filename = file.name;
-    console.log(filename);
     const byteData = await file.arrayBuffer();
     const buffer = Buffer.from(byteData);
 
-    // const filePath = `./uploads/${file.name}`;
-    const filePath = `https://e-omega-inky.vercel.app/public/uploads/${file.name}`;
+    // Convert the image to Base64
+    const base64Image = buffer.toString("base64");
+    const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
+    const base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
 
-    await writeFile(filePath, buffer);
-    const formDataObject = {};
-
-    // Iterate over form data entries
-    for (const [key, value] of data.entries()) {
-      // Assign each field to the formDataObject
-      formDataObject[key] = value;
-    }
-    const { ProjectName, ProjectCategory, ProjectDescription } = formDataObject;
-
-    console.log(ProjectName, ProjectCategory);
+    const { ProjectName, ProjectCategory, ProjectDescription } =
+      Object.fromEntries(data.entries());
 
     const existingProjectName = await Project.findOne({ ProjectName });
 
     if (existingProjectName) {
       return NextResponse.json({
-        error: "project already exists",
+        error: "Project already exists",
         status: 400,
       });
     }
@@ -49,16 +99,15 @@ export async function POST(Request) {
       ProjectName,
       ProjectCategory,
       ProjectDescription,
-      Image: filename,
+      Image: base64String, // Store the Base64 string in MongoDB
     });
 
     const Save_Project = await Post_Project.save();
-    console.log(Save_Project);
     if (!Save_Project) {
-      return NextResponse.json({ message: "Team Member Not added" });
+      return NextResponse.json({ message: "Project not added" });
     } else {
       return NextResponse.json({
-        message: "Team Member created successfully",
+        message: "Project created successfully",
         success: true,
         status: 200,
       });
