@@ -52,15 +52,15 @@ const AddVacancyModal = ({ isclose, getVacancies }) => {
     console.log(_obj);
 
     try {
-      const response = await axios.post("/api/Vacancies/postVacancy", _obj);
+      const response = await axios.post(
+        "https://e-omega-inky.vercel.app/api/Vacancies/postVacancy",
+        _obj
+      );
 
-      if (!response.data.success) {
-        throw new Error(response.data.message || "Failed to create vacancy");
-      } else {
-        getVacancies();
-        isclose(); // Close the popup window
-        toast.success("Vacancy created successfully!");
-      }
+      console.log(response.data);
+      getVacancies();
+      isclose(); // Close the popup window
+      toast.success("Vacancy created successfully!");
     } catch (error) {
       console.error("Error fetching or parsing messages:", error);
     }
