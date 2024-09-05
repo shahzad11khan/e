@@ -47,7 +47,7 @@ const Login = () => {
         toast.success("Login successfully");
 
         // Use a relative path for navigation
-        router.push("/AdminDashboard/Home");
+        router.push("https://encodder.netlify.app/AdminDashboard/Home");
       } else {
         toast.warning("You are not verified for login 😢");
         // Keep the user on the login page to avoid unnecessary redirects
