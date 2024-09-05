@@ -30,6 +30,7 @@ const Page = () => {
         .then((response) => response.json())
         .then((data) => {
           setImageData(data.result.image);
+          console.log(data.result);
           setBlog(data.result);
         })
         .catch((error) => console.error("Error fetching image:", error));
@@ -80,12 +81,12 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <Image
+              <img
                 src={`data:image/png;base64,${image}`}
                 // src={`${blogData.image}`}
                 alt={blogData.blogtitle}
-                width={468}
-                height={358}
+                // width={468}
+                // height={358}
                 className="h-60"
               />
               <div className="mt-8">
