@@ -62,17 +62,16 @@ const AddNewProModal = ({ isclose, getallprojects }) => {
         formDataToSend.append("Image", formData.file);
       }
 
-      const response = await axios.post("/api/Project", formDataToSend);
+      const response = await axios.post(
+        "https://e-omega-inky.vercel.app/api/Project",
+        formDataToSend
+      );
 
-      if (!response.data.success) {
-        throw new Error(
-          response.data.message || "Failed to create team member"
-        );
-      } else {
-        getallprojects();
-        isclose(); // Close the popup window
-        toast.success("Project created successfully!");
-      }
+      console.log(response.data);
+
+      getallprojects();
+      isclose(); // Close the popup window
+      toast.success("Project created successfully!");
     } catch (error) {
       toast.error(error.message || "Failed to create admin");
     }
