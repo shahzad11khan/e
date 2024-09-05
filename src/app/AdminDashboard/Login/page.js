@@ -26,8 +26,8 @@ const Login = () => {
       // Use relative path for the API route
       const response = await axios.post("/api/Users/login", {
         // Assuming you're sending data in the request body
-        email: email, // Replace with your email input state
-        password: password, // Replace with your password input state
+        email: userlogin.email, // Access email from state
+        password: userlogin.password, // Access password from state
       });
 
       console.log("Login successful", response);
