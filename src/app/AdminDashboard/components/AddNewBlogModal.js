@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "./ShowApidatas/apiUrls";
 
 const AddNewBlogModal = ({ isclose, reload }) => {
   const modalRef = useRef();
@@ -73,10 +74,7 @@ const AddNewBlogModal = ({ isclose, reload }) => {
         image: formData.image,
       });
 
-      const response = await axios.post(
-        "https://e-omega-inky.vercel.app/api/Blog",
-        formDataToSend
-      );
+      const response = await axios.post(`${url}/api/Blog`, formDataToSend);
 
       console.log("Response from server:", response.data);
 

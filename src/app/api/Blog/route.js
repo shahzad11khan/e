@@ -1,8 +1,8 @@
 const { connect } = require("@/app/config/db");
 const { default: BlogModel } = require("@/app/models/BlogModel");
-const { writeFile } = require("fs/promises");
+// const { writeFile } = require("fs/promises");
 const { NextResponse } = require("next/server");
-import path from "path";
+// import path from "path";
 
 // // post team
 // export async function POST(Request) {
@@ -12,36 +12,46 @@ import path from "path";
 //     console.log(data);
 
 //     const file = data.get("image");
-//     let filename = "";
+//     // let filename = "";
+//     const byteData = await file.arrayBuffer();
+//     const buffer = Buffer.from(byteData);
 
-//     if (file) {
-//       filename = file.name;
-//       console.log(filename);
+//     // Convert the image to Base64
+//     const base64Image = buffer.toString("base64");
+//     const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
+//     const base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
 
-//       // Ensure the uploads directory exists
-//       const uploadsDir = path.join(process.cwd(), "public", "uploads");
+//     // if (file) {
+//     //   filename = file.name;
+//     //   console.log(filename);
 
-//       const filePath = path.join(uploadsDir, filename);
-//       console.log(`File path: ${filePath}`);
+//     //   // Ensure the uploads directory exists
+//     //   const uploadsDir = path.join(process.cwd(), "public", "uploads");
 
-//       const byteData = await file.arrayBuffer();
-//       const buffer = Buffer.from(byteData);
+//     //   const filePath = path.join(uploadsDir, filename);
+//     //   console.log(`File path: ${filePath}`);
 
-//       await writeFile(filePath, buffer);
-//     } else {
-//       // Use a default image if no file is uploaded
-//       filename = "default-image.png"; // Replace with your default image name
-//     }
+//     //   const byteData = await file.arrayBuffer();
+//     //   const buffer = Buffer.from(byteData);
 
-//     // Create an object to store form data
-//     const formDataObject = {};
-//     // Iterate over form data entries
-//     for (const [key, value] of data.entries()) {
-//       // Assign each field to the formDataObject
-//       formDataObject[key] = value;
-//     }
+//     //   await writeFile(filePath, buffer);
+//     // } else {
+//     //   // Use a default image if no file is uploaded
+//     //   filename = "default-image.png"; // Replace with your default image name
+//     // }
 
-//     const { blogtitle, author, datetime, description } = formDataObject;
+//     // // Create an object to store form data
+//     // const formDataObject = {};
+//     // // Iterate over form data entries
+//     // for (const [key, value] of data.entries()) {
+//     //   // Assign each field to the formDataObject
+//     //   formDataObject[key] = value;
+//     // }
+
+//     const { blogtitle, author, datetime, description } = Object.fromEntries(
+//       data.entries()
+//     );
+//     // const { blogtitle, author, datetime, description } = formDataObject;
 
 //     console.log(blogtitle, author, datetime, description);
 
@@ -59,7 +69,7 @@ import path from "path";
 //       author,
 //       datetime,
 //       description,
-//       image: filename,
+//       image: base64String,
 //     });
 
 //     const Save_Blog = await Post_Blog.save();
@@ -78,73 +88,75 @@ import path from "path";
 //     return NextResponse.json({ error: error.message, status: 500 });
 //   }
 // }
-
-const uploadsDir = path.join(process.cwd(), "public", "uploads");
-
 export async function POST(Request) {
   try {
+    // Connect to the database
     await connect();
+
+    // Retrieve form data
     const data = await Request.formData();
-    console.log(data);
 
+    // Extract the image file from the form data
     const file = data.get("image");
-    let filename = "";
 
+    // Handle the image upload and convert it to Base64
+    let base64String = "";
     if (file) {
-      filename = file.name;
-      console.log(filename);
-
-      const filePath = path.join(uploadsDir, filename);
-      console.log(`File path: ${filePath}`);
-
       const byteData = await file.arrayBuffer();
       const buffer = Buffer.from(byteData);
 
-      // Ensure the uploads directory exists
-      await writeFile(filePath, buffer);
+      // Convert the image to Base64
+      const base64Image = buffer.toString("base64");
+      const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
+      base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
     } else {
       // Use a default image if no file is uploaded
-      filename = "default-image.png"; // Replace with your default image name
+      base64String = "data:image/png;base64,DEFAULT_IMAGE_BASE64_STRING"; // Replace with your default image Base64 string
     }
 
-    const formDataObject = {};
-    for (const [key, value] of data.entries()) {
-      formDataObject[key] = value;
-    }
-    const { blogtitle, author, datetime, description } = formDataObject;
+    // Extract other form data fields
+    const { blogtitle, author, datetime, description } = Object.fromEntries(
+      data.entries()
+    );
 
-    console.log(blogtitle, author, datetime, description);
+    // Check if a blog with the same title already exists
+    const existingBlog = await BlogModel.findOne({ blogtitle });
 
-    const existingUser = await BlogModel.findOne({ blogtitle });
-
-    if (existingUser) {
+    if (existingBlog) {
       return NextResponse.json({
-        error: "User already exists",
+        error: "Blog already exists",
         status: 400,
       });
     }
 
-    const Post_Message = new BlogModel({
+    // Create a new blog entry
+    const newBlog = new BlogModel({
       blogtitle,
       author,
       datetime,
       description,
-      image: filename,
+      image: base64String, // Save the image as a Base64 string
     });
 
-    const Save_User = await Post_Message.save();
-    console.log(Save_User);
+    // Save the blog to the database
+    const savedBlog = await newBlog.save();
 
-    return NextResponse.json({
-      message: "BLog created successfully",
-      success: true,
-      status: 200,
-    });
+    // Return success or failure message based on the result
+    if (!savedBlog) {
+      return NextResponse.json({ message: "Blog not added", status: 500 });
+    } else {
+      return NextResponse.json({
+        message: "Blog created successfully",
+        success: true,
+        status: 200,
+      });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: error.message, status: 500 });
   }
 }
+
 // get all team members
 export async function GET() {
   try {

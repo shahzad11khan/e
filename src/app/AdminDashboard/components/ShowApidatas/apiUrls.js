@@ -1,6 +1,6 @@
 // apiUrls.js
 
-const url = "https://e-omega-inky.vercel.app";
+export const url = "https://e-omega-inky.vercel.app";
 export const API_URL_USER = `${url}/api/Users`;
 export const API_URL_Verify = `${url}/api/Users/verifyEmail`;
 export const API_URL_TEAM = `${url}/api/Team`;

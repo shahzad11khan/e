@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "./ShowApidatas/apiUrls";
 
 const AddVacancyModal = ({ isclose, getVacancies }) => {
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const AddVacancyModal = ({ isclose, getVacancies }) => {
 
     try {
       const response = await axios.post(
-        "https://e-omega-inky.vercel.app/api/Vacancies/postVacancy",
+        `${url}/api/Vacancies/postVacancy`,
         _obj
       );
 

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { url } from "./ShowApidatas/apiUrls";
 
 const AddNewMemModal = ({ isclose }) => {
   const modalRef = useRef();
@@ -75,10 +76,7 @@ const AddNewMemModal = ({ isclose }) => {
         Github: formData.Github,
         image: formData.file,
       });
-      const response = await axios.post(
-        "https://e-omega-inky.vercel.app/api/Team",
-        formDataToSend
-      );
+      const response = await axios.post(`${url}/api/Team`, formDataToSend);
 
       console.log(response.data);
       if (!response.data.success) {
