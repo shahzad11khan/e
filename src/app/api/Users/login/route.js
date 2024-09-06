@@ -16,6 +16,8 @@ export async function POST(request) {
       });
     }
 
+    console.log("Checking user with email:", email);
+
     // Find user by email
     const user = await User.findOne({ email }).exec();
 
@@ -27,6 +29,8 @@ export async function POST(request) {
       });
     }
 
+    console.log("User found:", user);
+
     // Validate password
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
@@ -36,8 +40,8 @@ export async function POST(request) {
       });
     }
 
-    // Check if the user is verified
-    if (!user.isVerfied) {
+    // Check if the user is verified (fixed typo here)
+    if (!user.isVerified) {
       return NextResponse.json({
         error: "User is not verified",
         status: 403, // Forbidden status for unverified users
@@ -47,16 +51,17 @@ export async function POST(request) {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, username: user.username, email: user.email },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "defaultSecret", // Use a fallback secret for testing
       { expiresIn: "1h" } // Token expires in 1 hour
     );
+
+    console.log("JWT token generated:", token);
 
     const response = NextResponse.json({
       token,
       userId: user._id,
       username: user.username,
       email: user.email,
-      isVerified: user.isVerified,
       message: "Login successful",
       status: 200,
     });
@@ -69,7 +74,8 @@ export async function POST(request) {
 
     return response;
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Login error:", error.message);
+    console.error("Stack trace:", error.stack);
     return NextResponse.json({
       error: "Internal server error",
       status: 500,
