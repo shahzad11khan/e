@@ -182,7 +182,7 @@ const How_we_work = () => {
 
               {/* iamge */}
               <div className="bg-yellow w-full md:w-[100%] h-auto md:h-full relative mt-5">
-                <Image
+                <img
                   src={item.image}
                   alt="Logo"
                   className="object-cover w-full h-full"

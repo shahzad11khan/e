@@ -176,13 +176,7 @@ const Page = () => {
                 key={project.id}
                 className=" rounded-xl overflow-hidden shadow-lg w-6/6 p-5 bg-blue-100"
               >
-                <Image
-                  className="w-full"
-                  src={`/uploads/${project.Image}`}
-                  alt="Image"
-                  width={200}
-                  height={200}
-                />
+                <img className="w-full" src={project.Image} alt="Image" />
                 <div className="px-6 py-4">
                   <div className="font-semibold text-sm text-gray-600 mb-4">
                     <span className="text-2xl font-black border-b-4 border-custom-blue">

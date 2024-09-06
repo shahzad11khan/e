@@ -71,11 +71,9 @@ const Page = () => {
               style={{ width: "350px" }}
               key={blogData._id}
             >
-              <Image
-                src={`data:image/jpeg;base64,${blogData.image}`} // Adjust the MIME type if needed
+              <img
+                src={blogData.image} // Adjust the MIME type if needed
                 alt={blogData.blogtitle}
-                width={468}
-                height={358}
                 className="h-60"
               />
 

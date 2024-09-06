@@ -264,13 +264,7 @@ const MobileApp = () => {
                   key={items.image}
                   className="border-2 border-gray-300 px-16 py-10 text-center flex flex-col gap-12 justify-between items-center rounded-lg "
                 >
-                  <Image
-                    src={items.image}
-                    className="rounded-lg"
-                    alt="image"
-                    width={300}
-                    height={300}
-                  />
+                  <img src={items.image} className="rounded-lg" alt="image" />
                   <span className="font-bold">{items.name}</span>
                 </div>
               );

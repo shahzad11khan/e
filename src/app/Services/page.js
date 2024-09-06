@@ -97,13 +97,7 @@ const Services = () => {
                   key={items.image}
                   className="border-2 border-gray-400 px-2 py-16 text-center flex flex-col gap-24 justify-between items-center rounded-lg bg-custom-blue text-xl"
                 >
-                  <Image
-                    src={items.image}
-                    className="rounded-lg"
-                    alt="image"
-                    width={200}
-                    height={200}
-                  />
+                  <img src={items.image} className="rounded-lg" alt="image" />
                   <div className="font-bold text-white text-2xl">
                     <span className="">{items.name}</span>
                     <div className="mt-4 text-center flex justify-center">
