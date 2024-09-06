@@ -31,19 +31,19 @@ const Login = () => {
       console.log("Login successful", response.data);
 
       // Check if the user is verified
-      const isVerified = response.data.isVerified;
-      if (isVerified === true) {
-        // Store token and userId in localStorage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("userId", response.data.userId);
+      // const isVerified = response.data.isVerified;
+      // if (isVerified === true) {
+      //   // Store token and userId in localStorage
+      //   localStorage.setItem("token", response.data.token);
+      //   localStorage.setItem("userId", response.data.userId);
 
-        toast.success("Login successful");
+      //   toast.success("Login successful");
 
-        // Use a relative path for navigation
-        router.push("/AdminDashboard/Home");
-      } else {
-        toast.warning("You are not verified for login 😢");
-      }
+      //   // Use a relative path for navigation
+      //   router.push("/AdminDashboard/Home");
+      // } else {
+      //   toast.warning("You are not verified for login 😢");
+      // }
     } catch (error) {
       console.error("Login error:", error); // Better error logging
       toast.error("Something went wrong");
