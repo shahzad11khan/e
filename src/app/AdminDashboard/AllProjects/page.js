@@ -105,9 +105,9 @@ const ProjectTable = () => {
                       <tr key={pro._id} className="border-2 border-b-gray-400">
                         <td className="px-4 py-2">{idx + 1}</td>
                         <td className="px-4 py-2">
-                          <Image
-                            src={`/uploads/${pro.Image}`}
-                            alt="Project Image"
+                          <img
+                            src={pro.Image}
+                            alt={pro.ProjectName}
                             className="h-16 w-16 object-cover"
                             width={40}
                             height={40}

@@ -1,73 +1,23 @@
-const { connect } = require("@/app/config/db");
-const { default: Project } = require("@/app/models/ProjectModel");
-const { writeFile } = require("fs/promises");
-const { NextResponse } = require("next/server");
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+// const { connect } = require("@/app/config/db");
+// const { default: Project } = require("@/app/models/ProjectModel");
+// const { writeFile } = require("fs/promises");
+// const { NextResponse } = require("next/server");
 
-// post team
-// export async function POST(Request) {
-//   try {
-//     await connect();
-//     const data = await Request.formData();
-//     console.log(data);
+import { connect } from "@/app/config/db";
+import Project from "@/app/models/ProjectModel";
+import cloudinary from "cloudinary";
+import { NextResponse } from "next/server";
+import { Readable } from "stream";
+import { promisify } from "util";
 
-//     const file = data.get("Image");
-//     const filename = file.name;
-//     console.log(filename);
-//     const byteData = await file.arrayBuffer();
-//     const buffer = Buffer.from(byteData);
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-//     // const filePath = `./uploads/${file.name}`;
-//     const filePath = `https://e-omega-inky.vercel.app/public/uploads/${file.name}`;
-
-//     await writeFile(filePath, buffer);
-//     const formDataObject = {};
-
-//     // Iterate over form data entries
-//     for (const [key, value] of data.entries()) {
-//       // Assign each field to the formDataObject
-//       formDataObject[key] = value;
-//     }
-//     const { ProjectName, ProjectCategory, ProjectDescription } = formDataObject;
-
-//     console.log(ProjectName, ProjectCategory);
-
-//     const existingProjectName = await Project.findOne({ ProjectName });
-
-//     if (existingProjectName) {
-//       return NextResponse.json({
-//         error: "project already exists",
-//         status: 400,
-//       });
-//     }
-
-//     const Post_Project = new Project({
-//       ProjectName,
-//       ProjectCategory,
-//       ProjectDescription,
-//       Image: filename,
-//     });
-
-//     const Save_Project = await Post_Project.save();
-//     console.log(Save_Project);
-//     if (!Save_Project) {
-//       return NextResponse.json({ message: "Team Member Not added" });
-//     } else {
-//       return NextResponse.json({
-//         message: "Team Member created successfully",
-//         success: true,
-//         status: 200,
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json({ error: error.message, status: 500 });
-//   }
-// }
+const pipeline = promisify(Readable.prototype.pipe);
 
 export async function POST(Request) {
   try {
@@ -75,13 +25,29 @@ export async function POST(Request) {
     const data = await Request.formData();
 
     const file = data.get("Image");
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
+    let imageUrl = "";
 
-    // Convert the image to Base64
-    const base64Image = buffer.toString("base64");
-    const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
-    const base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
+    if (file) {
+      const byteData = await file.arrayBuffer();
+      const buffer = Buffer.from(byteData);
+
+      // Upload to Cloudinary
+      const uploadResponse = await new Promise((resolve, reject) => {
+        cloudinary.v2.uploader
+          .upload_stream({ resource_type: "auto" }, (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imageUrl = uploadResponse.secure_url;
+      console.log(`Uploaded image URL: ${imageUrl}`);
+    } else {
+      // Use a default image if no file is uploaded
+      imageUrl =
+        "https://res.cloudinary.com/dpj2ewekx/image/upload/v1725603041/samples/smile.jpg"; // Replace with your default image URL
+    }
 
     const { ProjectName, ProjectCategory, ProjectDescription } =
       Object.fromEntries(data.entries());
@@ -99,7 +65,7 @@ export async function POST(Request) {
       ProjectName,
       ProjectCategory,
       ProjectDescription,
-      Image: base64String, // Store the Base64 string in MongoDB
+      Image: imageUrl, // Store the Cloudinary URL in MongoDB
     });
 
     const Save_Project = await Post_Project.save();
