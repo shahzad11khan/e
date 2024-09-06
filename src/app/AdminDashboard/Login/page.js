@@ -32,7 +32,7 @@ const Login = () => {
 
       // Check if the user is verified
       const isVerified = response.data.isVerified;
-      if (isVerified) {
+      if (isVerified === true) {
         // Store token and userId in localStorage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userId", response.data.userId);
