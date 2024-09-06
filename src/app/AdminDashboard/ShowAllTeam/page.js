@@ -107,7 +107,7 @@ const ShowAllTeam = () => {
                         <td className="px-4 py-2 text-center">{idx + 1}</td>
                         <td className="px-4 py-2">
                           <Image
-                            src={`/uploads/${team.image}`}
+                            src={`${team.image}`}
                             alt="User"
                             className="h-16 w-16 object-cover"
                             width={40}
