@@ -119,12 +119,10 @@ const AdminTable = () => {
                       >
                         <td className="px-4 py-2 text-center">{index + 1}</td>
                         <td className="px-4 py-2">
-                          <Image
-                            src={`/uploads/${admin.Image}`}
-                            alt="admin"
+                          <img
+                            src={admin.Image}
+                            alt={admin.username}
                             className="h-16 w-16 object-cover"
-                            width={20}
-                            height={40}
                           />
                         </td>
                         <td className="px-4 py-2">{admin.username}</td>

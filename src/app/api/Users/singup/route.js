@@ -4,7 +4,6 @@ import { connect } from "@/app/config/db";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/app/helper/mailer";
 import cloudinary from "cloudinary";
-import bcrypt from "bcryptjs";
 
 // Configure Cloudinary
 cloudinary.v2.config({
