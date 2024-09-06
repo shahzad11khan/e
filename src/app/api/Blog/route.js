@@ -1,93 +1,19 @@
-const { connect } = require("@/app/config/db");
-const { default: BlogModel } = require("@/app/models/BlogModel");
-// const { writeFile } = require("fs/promises");
-const { NextResponse } = require("next/server");
-// import path from "path";
+// const { connect } = require("@/app/config/db");
+// const { default: BlogModel } = require("@/app/models/BlogModel");
+// const { NextResponse } = require("next/server");
 
-// // post team
-// export async function POST(Request) {
-//   try {
-//     await connect();
-//     const data = await Request.formData();
-//     console.log(data);
+import { connect } from "@/app/config/db";
+import BlogModel from "@/app/models/BlogModel";
+import cloudinary from "cloudinary";
+import { NextResponse } from "next/server";
 
-//     const file = data.get("image");
-//     // let filename = "";
-//     const byteData = await file.arrayBuffer();
-//     const buffer = Buffer.from(byteData);
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-//     // Convert the image to Base64
-//     const base64Image = buffer.toString("base64");
-//     const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
-//     const base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
-
-//     // if (file) {
-//     //   filename = file.name;
-//     //   console.log(filename);
-
-//     //   // Ensure the uploads directory exists
-//     //   const uploadsDir = path.join(process.cwd(), "public", "uploads");
-
-//     //   const filePath = path.join(uploadsDir, filename);
-//     //   console.log(`File path: ${filePath}`);
-
-//     //   const byteData = await file.arrayBuffer();
-//     //   const buffer = Buffer.from(byteData);
-
-//     //   await writeFile(filePath, buffer);
-//     // } else {
-//     //   // Use a default image if no file is uploaded
-//     //   filename = "default-image.png"; // Replace with your default image name
-//     // }
-
-//     // // Create an object to store form data
-//     // const formDataObject = {};
-//     // // Iterate over form data entries
-//     // for (const [key, value] of data.entries()) {
-//     //   // Assign each field to the formDataObject
-//     //   formDataObject[key] = value;
-//     // }
-
-//     const { blogtitle, author, datetime, description } = Object.fromEntries(
-//       data.entries()
-//     );
-//     // const { blogtitle, author, datetime, description } = formDataObject;
-
-//     console.log(blogtitle, author, datetime, description);
-
-//     const existingBlogName = await BlogModel.findOne({ blogtitle });
-
-//     if (existingBlogName) {
-//       return NextResponse.json({
-//         error: "Blog already exists",
-//         status: 400,
-//       });
-//     }
-
-//     const Post_Blog = new BlogModel({
-//       blogtitle,
-//       author,
-//       datetime,
-//       description,
-//       image: base64String,
-//     });
-
-//     const Save_Blog = await Post_Blog.save();
-//     console.log(Save_Blog);
-//     if (!Save_Blog) {
-//       return NextResponse.json({ message: "Blog Not added" });
-//     } else {
-//       return NextResponse.json({
-//         message: "Blog created successfully",
-//         success: true,
-//         status: 200,
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json({ error: error.message, status: 500 });
-//   }
-// }
 export async function POST(Request) {
   try {
     // Connect to the database
@@ -98,20 +24,28 @@ export async function POST(Request) {
 
     // Extract the image file from the form data
     const file = data.get("image");
+    let imageUrl = "";
 
-    // Handle the image upload and convert it to Base64
-    let base64String = "";
     if (file) {
       const byteData = await file.arrayBuffer();
       const buffer = Buffer.from(byteData);
 
-      // Convert the image to Base64
-      const base64Image = buffer.toString("base64");
-      const mimeType = file.type; // Get the MIME type (image/png, image/jpeg, etc.)
-      base64String = `data:${mimeType};base64,${base64Image}`; // This will be stored in the DB
+      // Upload the image to Cloudinary
+      const uploadResponse = await new Promise((resolve, reject) => {
+        cloudinary.v2.uploader
+          .upload_stream({ resource_type: "auto" }, (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imageUrl = uploadResponse.secure_url;
+      console.log(`Uploaded image URL: ${imageUrl}`);
     } else {
-      // Use a default image if no file is uploaded
-      base64String = "data:image/png;base64,DEFAULT_IMAGE_BASE64_STRING"; // Replace with your default image Base64 string
+      // Use a default image URL if no file is uploaded
+      imageUrl =
+        "https://res.cloudinary.com/dpj2ewekx/image/upload/v1725603041/samples/smile.jpg"; // Replace with your default image URL
     }
 
     // Extract other form data fields
@@ -135,7 +69,7 @@ export async function POST(Request) {
       author,
       datetime,
       description,
-      image: base64String, // Save the image as a Base64 string
+      image: imageUrl, // Save the Cloudinary image URL
     });
 
     // Save the blog to the database

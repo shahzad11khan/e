@@ -108,8 +108,8 @@ const Blogs = () => {
                         <td className="px-4 py-2">{idx + 1}</td>
                         <td className="px-4 py-2">
                           <Image
-                            src={`/uploads/${blog.image}`}
-                            alt="Project Image"
+                            src={blog.image}
+                            alt={blog.blogtitle}
                             className="h-16 w-16 object-cover"
                             width={40}
                             height={40}
