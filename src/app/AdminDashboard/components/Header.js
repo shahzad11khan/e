@@ -50,6 +50,7 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("email");
+    Cookies.remove("token");
 
     router.push("/AdminDashboard/Login");
     toast.success("Logged out successfully");
