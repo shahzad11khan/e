@@ -19,33 +19,31 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setloading(true); // Assuming `setLoading` is a state setter
 
     try {
-      setloading(true);
-
       // Use relative path for the API route
       const response = await axios.post("/api/Users/login", {
         email: userlogin.email, // Access email from state
         password: userlogin.password, // Access password from state
       });
 
-      console.log("Login successful", response);
+      console.log("Login successful", response.data);
 
-      // If using verification, uncomment the following code
-      const isVerified = response.data.isVerfied;
-      if (isVerified) {
-        // Store token and userId in localStorage
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("userId", response.data.userId);
+      // Check if the user is verified
+      // const isVerified = response.data.isVerified;
+      // if (isVerified) {
+      //   // Store token and userId in localStorage
+      //   localStorage.setItem("token", response.data.token);
+      //   localStorage.setItem("userId", response.data.userId);
 
-        toast.success("Login successfully");
+      //   toast.success("Login successful");
 
-        // Use a relative path for navigation
-        router.push("https://encodder.netlify.app/AdminDashboard/Home");
-      } else {
-        toast.warning("You are not verified for login 😢");
-        // Keep the user on the login page to avoid unnecessary redirects
-      }
+      //   // Use a relative path for navigation
+      //   router.push("/AdminDashboard/Home");
+      // } else {
+      //   toast.warning("You are not verified for login 😢");
+      // }
     } catch (error) {
       console.error("Login error:", error); // Better error logging
       toast.error("Something went wrong");
