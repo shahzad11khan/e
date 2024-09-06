@@ -62,10 +62,10 @@ const AdminTable = () => {
     }
   };
 
-  const handleVerify = (id) => {
-    setSelectedVerifyAdminId(id);
-    setVerifyModel(true);
-  };
+  // const handleVerify = (id) => {
+  //   setSelectedVerifyAdminId(id);
+  //   setVerifyModel(true);
+  // };
 
   const handleEdit = (id) => {
     setSelectedAdminId(id);
@@ -102,8 +102,8 @@ const AdminTable = () => {
                   <th className="px-4 py-2">User</th>
                   <th className="px-4 py-2">UserName</th>
                   <th className="px-4 py-2">Email</th>
-                  <th className="px-4 py-2">IsAdminVerified</th>
-                  <th className="px-4 py-2">VerifyAdmin</th>
+                  {/* <th className="px-4 py-2">IsAdminVerified</th> */}
+                  {/* <th className="px-4 py-2">VerifyAdmin</th> */}
                   <th className="px-4 py-2">Edit</th>
                   <th className="px-4 py-2">Delete</th>
                 </tr>
@@ -127,21 +127,21 @@ const AdminTable = () => {
                         </td>
                         <td className="px-4 py-2">{admin.username}</td>
                         <td className="px-4 py-2">{admin.email}</td>
-                        <td className="px-4 py-2">
+                        {/* <td className="px-4 py-2">
                           {admin.isVerfied === true ? (
                             <FaCheck />
                           ) : (
                             <span>&#x2717;</span>
                           )}
-                        </td>
-                        <td className="px-4 py-2 text-center">
+                        </td> */}
+                        {/* <td className="px-4 py-2 text-center">
                           <button
                             className="text-yellow-500 px-2 py-1 rounded hover:underline"
                             onClick={() => handleVerify(admin._id)}
                           >
                             Verify Admin
                           </button>
-                        </td>
+                        </td> */}
                         <td className="px-4 py-2 text-center">
                           <button
                             className="text-green-500 px-2 py-1 rounded hover:underline"
