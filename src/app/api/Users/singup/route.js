@@ -1,12 +1,17 @@
 import bcrypt from "bcrypt";
 import User from "@/app/models/UserModel";
-import { connect } from "@/app/config/db.js";
+import { connect } from "@/app/config/db";
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/app/helper/mailer";
-import { writeFile } from "fs/promises";
-import path from "path";
+import cloudinary from "cloudinary";
+import bcrypt from "bcryptjs";
 
-const uploadsDir = path.join(process.cwd(), "public", "uploads");
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(Request) {
   try {
@@ -15,23 +20,28 @@ export async function POST(Request) {
     console.log(data);
 
     const file = data.get("Image");
-    let filename = "";
+    let imageUrl = "";
 
     if (file) {
-      filename = file.name;
-      console.log(filename);
-
-      const filePath = path.join(uploadsDir, filename);
-      console.log(`File path: ${filePath}`);
-
       const byteData = await file.arrayBuffer();
       const buffer = Buffer.from(byteData);
 
-      // Ensure the uploads directory exists
-      await writeFile(filePath, buffer);
+      // Upload to Cloudinary
+      const uploadResponse = await new Promise((resolve, reject) => {
+        cloudinary.v2.uploader
+          .upload_stream({ resource_type: "auto" }, (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          })
+          .end(buffer);
+      });
+
+      imageUrl = uploadResponse.secure_url;
+      console.log(`Uploaded image URL: ${imageUrl}`);
     } else {
       // Use a default image if no file is uploaded
-      filename = "default-image.png"; // Replace with your default image name
+      imageUrl =
+        "https://res.cloudinary.com/dpj2ewekx/image/upload/v1725603041/samples/smile.jpg"; // Replace with your default image URL
     }
 
     const formDataObject = {};
@@ -59,7 +69,7 @@ export async function POST(Request) {
       email,
       password: hashedPassword,
       confirmpassword,
-      Image: filename,
+      Image: imageUrl,
     });
 
     const Save_User = await Post_Message.save();

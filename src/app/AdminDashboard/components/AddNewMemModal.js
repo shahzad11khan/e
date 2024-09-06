@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { url } from "./ShowApidatas/apiUrls";
 
-const AddNewMemModal = ({ isclose }) => {
+const AddNewMemModal = ({ isclose, getteams }) => {
   const modalRef = useRef();
 
   const handleClose = (e) => {
@@ -84,6 +84,7 @@ const AddNewMemModal = ({ isclose }) => {
           response.data.message || "Failed to create team member"
         );
       } else {
+        getteams();
         isclose(); // Close the popup window
         toast.success("Team member created successfully!");
       }
