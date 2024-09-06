@@ -56,7 +56,7 @@ export async function POST(request) {
       userId: user._id,
       username: user.username,
       email: user.email,
-      isVerified: user.isVerified,
+      isVerfied: user.isVerfied,
       message: "Login successful",
       status: 200,
     });
