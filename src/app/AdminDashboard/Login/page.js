@@ -31,8 +31,9 @@ const Login = () => {
       console.log("Login successful", response.data);
 
       // Check if the user is verified
-      const isVerified = response.data.isVerified;
-      if (isVerified) {
+      const isVerifiedtoken = response.data.token;
+      const isVerifiedUserID = response.data.userId;
+      if (isVerifiedtoken && isVerifiedUserID) {
         // Store token and userId in localStorage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("userId", response.data.userId);
