@@ -37,7 +37,7 @@ export async function POST(request) {
     }
 
     // Check if the user is verified
-    if (!user.isVerified) {
+    if (!user.isVerfied) {
       return NextResponse.json({
         error: "User is not verified",
         status: 403, // Forbidden status for unverified users
