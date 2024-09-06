@@ -37,7 +37,7 @@ export async function POST(request) {
     }
 
     // Check if the user is verified
-    if (!user.isVerfied) {
+    if (!user.isVerified) {
       return NextResponse.json({
         error: "User is not verified",
         status: 403, // Forbidden status for unverified users
@@ -51,13 +51,12 @@ export async function POST(request) {
       { expiresIn: "1h" } // Token expires in 1 hour
     );
 
-    // Create response
     const response = NextResponse.json({
       token,
       userId: user._id,
       username: user.username,
       email: user.email,
-      isVerified: user.isVerfied,
+      isVerified: user.isVerified,
       message: "Login successful",
       status: 200,
     });
@@ -66,8 +65,6 @@ export async function POST(request) {
     response.cookies.set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // Set secure only in production
-      sameSite: "strict", // Prevent CSRF
-      maxAge: 3600, // Cookie expires in 1 hour
     });
 
     return response;
