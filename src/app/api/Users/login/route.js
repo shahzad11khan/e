@@ -53,10 +53,11 @@ export async function POST(request) {
 
     const response = NextResponse.json({
       token,
+      user: user,
       userId: user._id,
       username: user.username,
       email: user.email,
-      isVerified: user.isVerfied,
+      isVerified: user.isVerified,
       message: "Login successful",
       status: 200,
     });
