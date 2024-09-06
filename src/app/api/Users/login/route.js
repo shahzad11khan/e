@@ -1,12 +1,15 @@
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-import User from "@/app/models/UserModel";
+import User from "@/app/models/UserModel.js";
 import { NextResponse } from "next/server";
+import { connect } from "@/app/config/db";
 
 export async function POST(request) {
   try {
+    await connect();
     // Parse incoming request body
     const { email, password } = await request.json();
+    console.log(email, password);
 
     // Validate if email and password are provided
     if (!email || !password) {
@@ -19,7 +22,7 @@ export async function POST(request) {
     console.log("Checking user with email:", email);
 
     // Find user by email
-    const user = await User.findOne({ email }).exec();
+    const user = await User.findOne({ email });
 
     // Check if user exists
     if (!user) {
@@ -41,7 +44,7 @@ export async function POST(request) {
     }
 
     // Check if the user is verified (fixed typo here)
-    if (!user.isVerified) {
+    if (!user.isVerfied) {
       return NextResponse.json({
         error: "User is not verified",
         status: 403, // Forbidden status for unverified users
@@ -61,6 +64,7 @@ export async function POST(request) {
       token,
       userId: user._id,
       username: user.username,
+      isVerified: user.isVerfied,
       email: user.email,
       message: "Login successful",
       status: 200,
