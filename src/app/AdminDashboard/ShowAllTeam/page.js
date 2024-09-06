@@ -41,6 +41,7 @@ const ShowAllTeam = () => {
     try {
       const { admins } = await TeamCount();
       setshowAllTeam(admins);
+      console.log(admins);
     } catch (error) {
       console.log(`Failed to fetch team: ${error}`);
     }
