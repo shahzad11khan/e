@@ -84,7 +84,6 @@ const AddNewMemModal = ({ isclose }) => {
           response.data.message || "Failed to create team member"
         );
       } else {
-        getteams();
         isclose(); // Close the popup window
         toast.success("Team member created successfully!");
       }
