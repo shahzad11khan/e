@@ -25,8 +25,10 @@ const BlogSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  public_id: {
+
+  publicId: {
     type: String,
+    // required: true,
   },
 });
 

@@ -25,7 +25,7 @@ export async function POST(Request) {
     // Extract the image file from the form data
     const file = data.get("image");
     let imageUrl = "";
-    let publicId = ""; // To store the Cloudinary public_id
+    let publicId = "";
 
     if (file) {
       const byteData = await file.arrayBuffer();
@@ -41,18 +41,17 @@ export async function POST(Request) {
           .end(buffer);
       });
 
-      // Store the image URL and public_id
       imageUrl = uploadResponse.secure_url;
-      publicId = uploadResponse.public_id; // Capture the public_id from the response
+      publicId = uploadResponse.public_id;
       console.log(`Uploaded image URL: ${imageUrl}`);
-      console.log(`Uploaded image public ID: ${publicId}`);
+      console.log(`Uploaded image ID: ${publicId}`);
     } else {
       // Use a default image URL if no file is uploaded
       imageUrl =
         "https://res.cloudinary.com/dpj2ewekx/image/upload/v1725603041/samples/smile.jpg"; // Replace with your default image URL
-      publicId = "default_image_public_id"; // You can assign a default public_id for the default image
     }
 
+    // return;
     // Extract other form data fields
     const { blogtitle, author, datetime, description } = Object.fromEntries(
       data.entries()
@@ -74,8 +73,8 @@ export async function POST(Request) {
       author,
       datetime,
       description,
-      image: imageUrl, // Save the Cloudinary image URL
-      public_id: publicId, // Store the Cloudinary public_id
+      image: imageUrl,
+      publicId, // Save the Cloudinary image URL
     });
 
     // Save the blog to the database
