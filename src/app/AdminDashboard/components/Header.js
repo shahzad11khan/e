@@ -79,7 +79,7 @@ const Header = () => {
       <div className="flex items-center">
         <div className="relative">
           <Image
-            src={"/uploads/" + imagePreview}
+            src={imagePreview}
             alt="Profile"
             className="h-8 w-8 rounded-full cursor-pointer"
             height={70}
