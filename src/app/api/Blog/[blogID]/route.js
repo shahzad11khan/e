@@ -16,42 +16,42 @@ cloudinary.v2.config({
 export async function DELETE(request, context) {
   try {
     const id = context.params.blogID;
-    console.log(id);
+    console.log("Blog ID:", id);
 
     // Connect to the database
     await connect();
 
     // Find the blog by ID
-    const Find_Project = await BlogModel.findById(id);
+    const blog = await BlogModel.findById(id);
 
-    // Check if the blog exists
-    if (!Find_Project) {
+    if (!blog) {
       return NextResponse.json({ message: "Blog not found", status: 404 });
     }
 
-    // Delete the blog from the database
-    const _deletedblog = await BlogModel.findByIdAndDelete(id);
-    console.log(_deletedblog);
+    console.log("Blog:", blog);
+    const imagePublicId = blog.publicId; // Ensure this matches your schema
+    console.log("Image Public ID:", imagePublicId);
 
-    // Check if the blog was found and deleted
-    if (!_deletedblog) {
+    // Delete the blog from the database
+    const deletedBlog = await BlogModel.findByIdAndDelete(id);
+
+    if (!deletedBlog) {
       return NextResponse.json({
-        message: "Blog not found",
-        status: 404,
+        message: "Failed to delete blog",
+        status: 500,
       });
     }
 
-    // Get the Cloudinary public ID from the blog's image URL
-    const imagePublicId = Find_Project.public_id; // Assuming you store the Cloudinary public ID when uploading the image
-
-    // Delete the image from Cloudinary
-    try {
-      const cloudinaryResponse = await cloudinary.uploader.destroy(
-        imagePublicId
-      );
-      console.log(`Cloudinary response: ${cloudinaryResponse.result}`);
-    } catch (error) {
-      console.error("Failed to delete image from Cloudinary:", error);
+    // Delete the image from Cloudinary if publicId exists
+    if (imagePublicId) {
+      try {
+        const cloudinaryResponse = await cloudinary.v2.uploader.destroy(
+          imagePublicId
+        );
+        console.log(`Cloudinary response: ${cloudinaryResponse.result}`);
+      } catch (error) {
+        console.error("Failed to delete image from Cloudinary:", error);
+      }
     }
 
     return NextResponse.json({
@@ -136,9 +136,9 @@ export async function PUT(request, context) {
 
     if (newImageUrl && newImagePublicId) {
       // If a new image is uploaded, remove the old image from Cloudinary
-      if (blog._id) {
+      if (blog.publicId) {
         try {
-          await cloudinary.uploader.destroy(blog._id);
+          await cloudinary.uploader.destroy(blog.publicId);
         } catch (error) {
           console.error("Failed to delete old image from Cloudinary:", error);
         }
@@ -146,7 +146,7 @@ export async function PUT(request, context) {
 
       // Update blog with new image URL and public ID
       blog.image = newImageUrl;
-      blog.image_public_id = newImagePublicId;
+      blog.publicId = newImagePublicId;
     }
 
     await blog.save();
