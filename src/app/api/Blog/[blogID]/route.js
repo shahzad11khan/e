@@ -101,9 +101,7 @@ export async function PUT(request, context) {
 
       // Upload the new image to Cloudinary
       const uploadResponse = await cloudinary.uploader.upload_stream(
-        {
-          folder: "blog_images", // Optional folder in Cloudinary
-        },
+        {},
         (error, result) => {
           if (error) throw new Error(error);
           newImageUrl = result.secure_url;
@@ -138,9 +136,9 @@ export async function PUT(request, context) {
 
     if (newImageUrl && newImagePublicId) {
       // If a new image is uploaded, remove the old image from Cloudinary
-      if (blog.image_public_id) {
+      if (blog._id) {
         try {
-          await cloudinary.uploader.destroy(blog.image_public_id);
+          await cloudinary.uploader.destroy(blog._id);
         } catch (error) {
           console.error("Failed to delete old image from Cloudinary:", error);
         }
