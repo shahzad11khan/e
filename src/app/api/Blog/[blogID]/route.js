@@ -100,17 +100,29 @@ export async function PUT(request, context) {
       const buffer = Buffer.from(byteData);
 
       // Upload the new image to Cloudinary
-      const uploadResponse = await cloudinary.uploader.upload_stream(
-        {},
-        (error, result) => {
-          if (error) throw new Error(error);
-          newImageUrl = result.secure_url;
-          newImagePublicId = result.public_id;
-        }
-      );
+      const uploadResponse = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          { resource_type: "auto" },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
 
-      // Pass the buffer to the upload stream
-      uploadResponse.end(buffer);
+        // Write buffer to the upload stream
+        uploadStream.end(buffer);
+      });
+
+      newImageUrl = uploadResponse.secure_url;
+      newImagePublicId = uploadResponse.public_id;
+
+      // console.log("New Image URL:", newImageUrl);
+      // console.log("New Image Public ID:", newImagePublicId);
+
+      // uploadResponse.end(buffer);
     }
 
     // Create a form data object
@@ -133,12 +145,16 @@ export async function PUT(request, context) {
     blog.author = author || blog.author;
     blog.datetime = datetime || blog.datetime;
     blog.description = description || blog.description;
+    console.log("old public id:", blog.publicId);
+    console.log("old image url", newImageUrl);
+    console.log(newImagePublicId);
 
     if (newImageUrl && newImagePublicId) {
       // If a new image is uploaded, remove the old image from Cloudinary
       if (blog.publicId) {
         try {
           await cloudinary.uploader.destroy(blog.publicId);
+          console.log("file deleted");
         } catch (error) {
           console.error("Failed to delete old image from Cloudinary:", error);
         }
@@ -146,8 +162,12 @@ export async function PUT(request, context) {
 
       // Update blog with new image URL and public ID
       blog.image = newImageUrl;
+      console.log(blog.image);
+
       blog.publicId = newImagePublicId;
+      console.log("new image public id :", blog.publicId);
     }
+    // return;
 
     await blog.save();
 
