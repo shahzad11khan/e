@@ -25,6 +25,9 @@ const BlogSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  public_id: {
+    type: String,
+  },
 });
 
 // Create a model from the schema
