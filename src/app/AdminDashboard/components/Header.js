@@ -48,9 +48,10 @@ const Header = () => {
 
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     localStorage.removeItem("username");
     localStorage.removeItem("email");
-    Cookies.remove("token");
+    // Cookies.remove("token");
 
     router.push("/AdminDashboard/Login");
     toast.success("Logged out successfully");
