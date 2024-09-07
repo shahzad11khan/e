@@ -121,8 +121,6 @@ export async function PUT(request, context) {
 
       // console.log("New Image URL:", newImageUrl);
       // console.log("New Image Public ID:", newImagePublicId);
-
-      // uploadResponse.end(buffer);
     }
 
     // Create a form data object

@@ -22,8 +22,8 @@ export async function POST(Request) {
     console.log(data);
 
     const file = data.get("image");
-    let filename = "default-image.png"; // Default image
-
+    let filename = ""; // Default image
+    let publicId = "";
     if (file) {
       const byteData = await file.arrayBuffer();
       const buffer = Buffer.from(byteData);
@@ -40,6 +40,8 @@ export async function POST(Request) {
 
       filename = uploadResponse.secure_url; // Use Cloudinary URL
       console.log(`Uploaded image URL: ${filename}`);
+      publicId = uploadResponse.public_id; // Use Cloudinary URL
+      console.log(`Uploaded image ID: ${publicId}`);
     }
 
     // Extract form data
@@ -67,6 +69,7 @@ export async function POST(Request) {
       LinkedIn,
       Github,
       image: filename,
+      publicId,
     });
 
     const Save_Team = await Post_Team.save();

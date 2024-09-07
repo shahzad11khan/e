@@ -32,6 +32,10 @@ const teamSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  publicId: {
+    type: String,
+    // required: true,
+  },
 });
 
 // Create a model from the schema

@@ -22,6 +22,10 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  publicId: {
+    type: String,
+    // required: true,
+  },
 });
 
 // Create a model from the schema

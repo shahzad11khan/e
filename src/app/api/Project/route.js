@@ -26,6 +26,7 @@ export async function POST(Request) {
 
     const file = data.get("Image");
     let imageUrl = "";
+    let publicId = "";
 
     if (file) {
       const byteData = await file.arrayBuffer();
@@ -42,7 +43,10 @@ export async function POST(Request) {
       });
 
       imageUrl = uploadResponse.secure_url;
+      publicId = uploadResponse.public_id;
+
       console.log(`Uploaded image URL: ${imageUrl}`);
+      console.log(`Uploaded image URL: ${publicId}`);
     } else {
       // Use a default image if no file is uploaded
       imageUrl =
@@ -66,6 +70,7 @@ export async function POST(Request) {
       ProjectCategory,
       ProjectDescription,
       Image: imageUrl, // Store the Cloudinary URL in MongoDB
+      publicId,
     });
 
     const Save_Project = await Post_Project.save();
