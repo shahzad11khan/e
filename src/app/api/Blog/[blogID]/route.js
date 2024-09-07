@@ -42,7 +42,7 @@ export async function DELETE(request, context) {
     }
 
     // Get the Cloudinary public ID from the blog's image URL
-    const imagePublicId = Find_Project._id; // Assuming you store the Cloudinary public ID when uploading the image
+    const imagePublicId = Find_Project.public_id; // Assuming you store the Cloudinary public ID when uploading the image
 
     // Delete the image from Cloudinary
     try {
