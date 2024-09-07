@@ -20,6 +20,7 @@ export async function POST(Request) {
 
     const file = data.get("Image");
     let imageUrl = "";
+    let publicId = "";
 
     if (file) {
       const byteData = await file.arrayBuffer();
@@ -37,6 +38,8 @@ export async function POST(Request) {
 
       imageUrl = uploadResponse.secure_url;
       console.log(`Uploaded image URL: ${imageUrl}`);
+      publicId = uploadResponse.public_id; // Use Cloudinary URL
+      console.log(`Uploaded image ID: ${publicId}`);
     } else {
       // Use a default image if no file is uploaded
       imageUrl =
@@ -69,6 +72,7 @@ export async function POST(Request) {
       password: hashedPassword,
       confirmpassword,
       Image: imageUrl,
+      publicId,
     });
 
     const Save_User = await Post_Message.save();

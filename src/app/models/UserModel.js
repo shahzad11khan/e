@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  publicId: {
+    type: String,
+    // required: true,
+  },
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,

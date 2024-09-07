@@ -1,1 +1,3 @@
 https://e.vercel.app
+
+# only delete and update user remaining 
