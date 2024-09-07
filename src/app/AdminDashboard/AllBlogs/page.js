@@ -107,7 +107,7 @@ const Blogs = () => {
                       <tr key={blog._id} className="border-2 border-b-gray-400">
                         <td className="px-4 py-2">{idx + 1}</td>
                         <td className="px-4 py-2">
-                          <Image
+                          <img
                             src={blog.image}
                             alt={blog.blogtitle}
                             className="h-16 w-16 object-cover"
