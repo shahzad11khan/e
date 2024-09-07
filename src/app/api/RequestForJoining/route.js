@@ -2,12 +2,14 @@ const { connect } = require("@/app/config/db");
 const { default: RequestForJoining } = require("@/app/models/RequestOfJoining");
 const { NextResponse } = require("next/server");
 import { writeFile } from "fs/promises";
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+import cloudinary from "cloudinary";
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 // post
 export async function POST(Request) {
   try {
@@ -16,16 +18,28 @@ export async function POST(Request) {
     console.log(data);
 
     const file = data.get("file_cv");
-    const filename = file.name;
-    console.log(filename);
-    const byteData = await file.arrayBuffer();
-    const buffer = Buffer.from(byteData);
+    let filename = "";
+    let publicId = "";
 
-    const filePath = `./public/pdf/${file.name}`;
+    if (file) {
+      const byteData = await file.arrayBuffer();
+      const buffer = Buffer.from(byteData);
+      const uploadResponse = await new Promise((resolve, reject) => {
+        cloudinary.v2.uploader
+          .upload_stream({ resource_type: "auto" }, (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          })
+          .end(buffer);
+      });
 
-    await writeFile(filePath, buffer);
+      filename = uploadResponse.secure_url; // Use Cloudinary URL
+      console.log(`Uploaded image URL: ${filename}`);
+      publicId = uploadResponse.public_id; // Use Cloudinary URL
+      console.log(`Uploaded image ID: ${publicId}`);
+    }
+
     const formDataObject = {};
-
     // Iterate over form data entries
     for (const [key, value] of data.entries()) {
       // Assign each field to the formDataObject
@@ -43,6 +57,7 @@ export async function POST(Request) {
       experience,
       expected_salary,
       file_cv: filename,
+      publicId,
     });
 
     const Save_Request = await Post_Request.save();

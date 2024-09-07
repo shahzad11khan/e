@@ -1,8 +1,3 @@
-// const { connect } = require("@/app/config/db");
-// const { default: Team } = require("@/app/models/TeamModel");
-// const { NextResponse } = require("next/server");
-// import { cloudinaryLoader } from "next-cloudinary";
-// Configure Cloudinary
 import cloudinary from "cloudinary";
 import { NextResponse } from "next/server";
 import { connect } from "@/app/config/db";

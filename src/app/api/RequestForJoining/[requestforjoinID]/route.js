@@ -2,13 +2,14 @@ const { connect } = require("@/app/config/db");
 const { default: RequestForJoining } = require("@/app/models/RequestOfJoining");
 const { NextResponse } = require("next/server");
 import { unlink } from "fs/promises";
-import path from "path";
+import cloudinary from "cloudinary";
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function DELETE(request, context) {
   try {
@@ -26,9 +27,10 @@ export async function DELETE(request, context) {
       return NextResponse.json({ message: "Request not found", status: 404 });
     }
 
-    // Get the image file path
-    const imagePath = path.join("./public/dpf/", Request_Message.file_cv);
-    console.log(imagePath);
+    console.log("Request_Message:", Request_Message);
+    const imagePublicId = Request_Message.publicId; // Ensure this matches your schema
+    console.log("Image Public ID:", imagePublicId);
+
     // return;
 
     // Delete the user from the database
@@ -39,12 +41,16 @@ export async function DELETE(request, context) {
       return NextResponse.json({ message: "User not found", status: 404 });
     }
 
-    // Delete the image file from the filesystem
-    try {
-      await unlink(imagePath);
-      console.log(`Deleted file: ${imagePath}`);
-    } catch (error) {
-      console.error(`Failed to delete file: ${imagePath}`, error);
+    // Delete the image from Cloudinary if publicId exists
+    if (imagePublicId) {
+      try {
+        const cloudinaryResponse = await cloudinary.v2.uploader.destroy(
+          imagePublicId
+        );
+        console.log(`Cloudinary response: ${cloudinaryResponse.result}`);
+      } catch (error) {
+        console.error("Failed to delete image from Cloudinary:", error);
+      }
     }
 
     return NextResponse.json({

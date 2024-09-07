@@ -1,8 +1,6 @@
 const { connect } = require("@/app/config/db");
 const { default: Team } = require("@/app/models/TeamModel");
 const { NextResponse } = require("next/server");
-import { unlink, writeFile } from "fs/promises";
-import path from "path";
 import cloudinary from "cloudinary";
 
 // Configure Cloudinary
