@@ -229,7 +229,7 @@ const UpdateBlogModal = ({ isclose, reload, proId }) => {
           <div className="w-[100px] h-20 mb-4">
             {imagePreview ? (
               <img
-                src={"/uploads/" + imagePreview}
+                src={imagePreview}
                 alt={`Profile Picture of ${formData.author}`}
                 className="profile-picture"
               />
