@@ -78,12 +78,10 @@ const Header = () => {
 
       <div className="flex items-center">
         <div className="relative">
-          <Image
+          <img
             src={imagePreview}
             alt="Profile"
             className="h-8 w-8 rounded-full cursor-pointer"
-            height={70}
-            width={70}
             onClick={toggleDropdown}
           />
           {/* Dropdown */}

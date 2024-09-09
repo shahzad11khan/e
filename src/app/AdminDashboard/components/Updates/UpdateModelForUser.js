@@ -326,7 +326,7 @@ const UpdateAdminModal = ({ isclose, adminId, getadmins }) => {
           <div className="w-24 h-24 mb-4">
             {imagePreview ? (
               <img
-                src={"/uploads/" + imagePreview}
+                src={imagePreview}
                 alt={`Profile Picture of ${formData.UserName}`}
                 className="profile-picture"
               />
