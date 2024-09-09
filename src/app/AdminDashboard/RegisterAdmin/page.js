@@ -78,6 +78,7 @@ const AdminTable = () => {
       if (response.status === 200) {
         console.log("Verification status updated successfully:", response.data);
         // setIsVerified(newStatus); // Update the local state to reflect the new status
+        getAdmin();
       } else {
         console.error(
           "Failed to update verification status:",
