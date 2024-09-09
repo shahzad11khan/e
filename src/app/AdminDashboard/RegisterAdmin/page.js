@@ -66,6 +66,28 @@ const AdminTable = () => {
   //   setSelectedVerifyAdminId(id);
   //   setVerifyModel(true);
   // };
+  const [isVerified, setIsVerified] = useState(false);
+  const handleVerify = async (adminId) => {
+    try {
+      const newStatus = !isVerified; // Toggle the current isVerified status
+
+      const response = await axios.put(`/api/Users/${adminId}`, {
+        isVerified: newStatus, // Send the toggled status
+      });
+
+      if (response.status === 200) {
+        console.log("Verification status updated successfully:", response.data);
+        setIsVerified(newStatus); // Update the local state to reflect the new status
+      } else {
+        console.error(
+          "Failed to update verification status:",
+          response.data.error
+        );
+      }
+    } catch (error) {
+      console.error("Error updating verification status:", error);
+    }
+  };
 
   const handleEdit = (id) => {
     setSelectedAdminId(id);
@@ -103,7 +125,7 @@ const AdminTable = () => {
                   <th className="px-4 py-2">UserName</th>
                   <th className="px-4 py-2">Email</th>
                   {/* <th className="px-4 py-2">IsAdminVerified</th> */}
-                  {/* <th className="px-4 py-2">VerifyAdmin</th> */}
+                  <th className="px-4 py-2">VerifyAdmin</th>
                   <th className="px-4 py-2">Edit</th>
                   <th className="px-4 py-2">Delete</th>
                 </tr>
@@ -142,6 +164,15 @@ const AdminTable = () => {
                             Verify Admin
                           </button>
                         </td> */}
+                        <td className="px-4 py-2 text-center">
+                          <button
+                            className="text-yellow-500 px-2 py-1 rounded hover:underline"
+                            onClick={() => handleVerify(admin._id)} // Pass only the admin ID now
+                          >
+                            {isVerified ? false : true}{" "}
+                            {/* Change text based on the current state */}
+                          </button>
+                        </td>
                         <td className="px-4 py-2 text-center">
                           <button
                             className="text-green-500 px-2 py-1 rounded hover:underline"
