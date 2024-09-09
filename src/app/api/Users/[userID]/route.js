@@ -5,6 +5,15 @@ import { writeFile, unlink } from "fs/promises";
 import bcrypt from "bcrypt";
 import path from "path";
 
+import cloudinary from "cloudinary";
+
+// Configure Cloudinary
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export async function DELETE(request, context) {
   try {
     const id = context.params.userID;
@@ -22,8 +31,9 @@ export async function DELETE(request, context) {
     }
 
     // Get the image file path
-    const imagePath = path.join("./public/uploads/", user.Image);
-    console.log(imagePath);
+    console.log("user:", user);
+    const imagePublicId = user.publicId; // Ensure this matches your schema
+    console.log("Image Public ID:", imagePublicId);
     // return;
 
     // Delete the user from the database
@@ -34,12 +44,16 @@ export async function DELETE(request, context) {
       return NextResponse.json({ message: "User not found", status: 404 });
     }
 
-    // Delete the image file from the filesystem
-    try {
-      await unlink(imagePath);
-      console.log(`Deleted file: ${imagePath}`);
-    } catch (error) {
-      console.error(`Failed to delete file: ${imagePath}`, error);
+    // Delete the image from Cloudinary if publicId exists
+    if (imagePublicId) {
+      try {
+        const cloudinaryResponse = await cloudinary.v2.uploader.destroy(
+          imagePublicId
+        );
+        console.log(`Cloudinary response: ${cloudinaryResponse.result}`);
+      } catch (error) {
+        console.error("Failed to delete image from Cloudinary:", error);
+      }
     }
 
     return NextResponse.json({
@@ -65,13 +79,32 @@ export async function PUT(request, context) {
     console.log(typeof file);
     let filename = null;
     let buffer = null;
+    let newImagePublicId = null;
 
     if (typeof file === "object") {
       filename = file.name;
       const byteData = await file.arrayBuffer();
       buffer = Buffer.from(byteData);
-      const filePath = `./public/uploads/${filename}`;
-      await writeFile(filePath, buffer);
+      // Upload the new image to Cloudinary
+      const uploadResponse = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          { resource_type: "auto" },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        uploadStream.end(buffer);
+      });
+
+      filename = uploadResponse.secure_url;
+      newImagePublicId = uploadResponse.public_id;
+
+      // console.log("New Image URL:", newImageUrl);
+      // console.log("New Image Public ID:", newImagePublicId);
     }
 
     const formDataObject = {};
@@ -93,6 +126,8 @@ export async function PUT(request, context) {
     // Update the user details
     user.username = username || user.username;
     user.email = email || user.email;
+    console.log("old public id:", user.publicId);
+    console.log("old image url", user.Image);
 
     if (password !== confirmpassword) {
       return NextResponse.json({
@@ -111,6 +146,25 @@ export async function PUT(request, context) {
 
     if (filename) {
       user.Image = filename;
+    }
+
+    if (filename && newImagePublicId) {
+      // If a new image is uploaded, remove the old image from Cloudinary
+      if (user.publicId) {
+        try {
+          await cloudinary.uploader.destroy(user.publicId);
+          console.log("file deleted");
+        } catch (error) {
+          console.error("Failed to delete old image from Cloudinary:", error);
+        }
+      }
+
+      // Update blog with new image URL and public ID
+      user.Image = filename;
+      console.log("new image url", user.Image);
+
+      user.publicId = newImagePublicId;
+      console.log("new image public id :", user.publicId);
     }
 
     await user.save();

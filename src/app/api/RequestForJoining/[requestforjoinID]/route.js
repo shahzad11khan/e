@@ -1,7 +1,6 @@
 const { connect } = require("@/app/config/db");
 const { default: RequestForJoining } = require("@/app/models/RequestOfJoining");
 const { NextResponse } = require("next/server");
-import { unlink } from "fs/promises";
 import cloudinary from "cloudinary";
 
 // Configure Cloudinary
