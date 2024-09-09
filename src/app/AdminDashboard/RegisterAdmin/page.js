@@ -66,10 +66,10 @@ const AdminTable = () => {
   //   setSelectedVerifyAdminId(id);
   //   setVerifyModel(true);
   // };
-  const [isVerified, setIsVerified] = useState(false);
-  const handleVerify = async (adminId) => {
+  // const [isVerified, setIsVerified] = useState(false);
+  const handleVerify = async (adminId, currentStatus) => {
     try {
-      const newStatus = !isVerified; // Toggle the current isVerified status
+      const newStatus = !currentStatus; // Toggle the current isVerified status
       console.log(newStatus);
       const response = await axios.put(`/api/Users/verify/${adminId}`, {
         isVerfied: newStatus, // Send the toggled status
@@ -77,7 +77,7 @@ const AdminTable = () => {
 
       if (response.status === 200) {
         console.log("Verification status updated successfully:", response.data);
-        setIsVerified(newStatus); // Update the local state to reflect the new status
+        // setIsVerified(newStatus); // Update the local state to reflect the new status
       } else {
         console.error(
           "Failed to update verification status:",
@@ -159,10 +159,12 @@ const AdminTable = () => {
                         <td className="px-4 py-2 text-center">
                           <button
                             className="text-yellow-500 px-2 py-1 rounded hover:underline"
-                            onClick={() => handleVerify(admin._id)}
+                            onClick={() =>
+                              handleVerify(admin._id, admin.isVerfied)
+                            }
                           >
                             {/* Verify Admin */}
-                            {isVerified === true ? (
+                            {admin.isVerfied ? (
                               <FaCheck />
                             ) : (
                               <span>&#x2717;</span>
