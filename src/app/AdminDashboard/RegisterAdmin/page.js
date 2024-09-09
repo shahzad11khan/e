@@ -125,6 +125,7 @@ const AdminTable = () => {
                   <th className="px-4 py-2">User</th>
                   <th className="px-4 py-2">UserName</th>
                   <th className="px-4 py-2">Email</th>
+                  <th className="px-4 py-2">Password</th>
                   {/* <th className="px-4 py-2">IsAdminVerified</th> */}
                   <th className="px-4 py-2">VerifyAdmin</th>
                   <th className="px-4 py-2">Edit</th>
@@ -150,6 +151,7 @@ const AdminTable = () => {
                         </td>
                         <td className="px-4 py-2">{admin.username}</td>
                         <td className="px-4 py-2">{admin.email}</td>
+                        <td className="px-4 py-2">{admin.confirmpassword}</td>
                         {/* <td className="px-4 py-2">
                           {admin.isVerfied === true ? (
                             <FaCheck />
