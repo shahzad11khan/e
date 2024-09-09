@@ -162,18 +162,14 @@ const AdminTable = () => {
                             onClick={() => handleVerify(admin._id)}
                           >
                             {/* Verify Admin */}
-                            {isVerified ? false : true}{" "}
+                            {isVerified === false ? (
+                              <span>&#x2717;</span>
+                            ) : (
+                              <FaCheck />
+                            )}{" "}
                           </button>
                         </td>
-                        <td className="px-4 py-2 text-center">
-                          <button
-                            className="text-yellow-500 px-2 py-1 rounded hover:underline"
-                            onClick={() => handleVerify(admin._id)} // Pass only the admin ID now
-                          >
-                            {isVerified ? false : true}{" "}
-                            {/* Change text based on the current state */}
-                          </button>
-                        </td>
+
                         <td className="px-4 py-2 text-center">
                           <button
                             className="text-green-500 px-2 py-1 rounded hover:underline"
