@@ -44,6 +44,7 @@ const Login = () => {
         router.push("/AdminDashboard/Home");
       } else {
         toast.warning("You are not verified for login 😢");
+        router.push("/AdminDashboard/Login");
       }
     } catch (error) {
       console.error("Login error:", error); // Better error logging
