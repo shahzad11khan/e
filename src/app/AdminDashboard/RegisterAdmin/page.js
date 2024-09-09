@@ -162,10 +162,10 @@ const AdminTable = () => {
                             onClick={() => handleVerify(admin._id)}
                           >
                             {/* Verify Admin */}
-                            {isVerified === false ? (
-                              <span>&#x2717;</span>
-                            ) : (
+                            {isVerified === true ? (
                               <FaCheck />
+                            ) : (
+                              <span>&#x2717;</span>
                             )}{" "}
                           </button>
                         </td>
