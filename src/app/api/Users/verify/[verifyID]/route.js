@@ -9,14 +9,18 @@ export async function PUT(request, context) {
     await connect();
     const id = context.params.verifyID;
 
-    const { isVerified } = await request.json();
+    console.log(id);
+
+    const { isVerfied } = await request.json();
+
+    console.log(isVerfied);
 
     const user = await User.findById(id);
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    user.isVerified = isVerified;
+    user.isVerfied = isVerfied;
     await user.save();
 
     return NextResponse.json({

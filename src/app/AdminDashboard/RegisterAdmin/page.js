@@ -70,9 +70,9 @@ const AdminTable = () => {
   const handleVerify = async (adminId) => {
     try {
       const newStatus = !isVerified; // Toggle the current isVerified status
-
+      console.log(newStatus);
       const response = await axios.put(`/api/Users/verify/${adminId}`, {
-        isVerified: newStatus, // Send the toggled status
+        isVerfied: newStatus, // Send the toggled status
       });
 
       if (response.status === 200) {
@@ -156,14 +156,15 @@ const AdminTable = () => {
                             <span>&#x2717;</span>
                           )}
                         </td> */}
-                        {/* <td className="px-4 py-2 text-center">
+                        <td className="px-4 py-2 text-center">
                           <button
                             className="text-yellow-500 px-2 py-1 rounded hover:underline"
                             onClick={() => handleVerify(admin._id)}
                           >
-                            Verify Admin
+                            {/* Verify Admin */}
+                            {isVerified ? false : true}{" "}
                           </button>
-                        </td> */}
+                        </td>
                         <td className="px-4 py-2 text-center">
                           <button
                             className="text-yellow-500 px-2 py-1 rounded hover:underline"
