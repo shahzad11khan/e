@@ -71,7 +71,7 @@ const AdminTable = () => {
     try {
       const newStatus = !isVerified; // Toggle the current isVerified status
 
-      const response = await axios.put(`/api/Users/${adminId}`, {
+      const response = await axios.put(`/api/Users/verify/${adminId}`, {
         isVerified: newStatus, // Send the toggled status
       });
 

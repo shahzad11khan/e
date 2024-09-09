@@ -142,33 +142,3 @@ export async function GET(request, context) {
     return NextResponse.json({ Message: "Internal Server Error " });
   }
 }
-
-// update vefiy user
-
-export async function PUT(request, context) {
-  try {
-    await connect();
-    const id = context.params.userID;
-
-    const { isVerified } = await request.json();
-
-    const user = await User.findById(id);
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    user.isVerified = isVerified;
-    await user.save();
-
-    return NextResponse.json({
-      message: "User verification status updated successfully",
-      user,
-    });
-  } catch (error) {
-    console.error("Error Updating User:", error);
-    return NextResponse.json(
-      { error: "Failed to update user verification status" },
-      { status: 500 }
-    );
-  }
-}
